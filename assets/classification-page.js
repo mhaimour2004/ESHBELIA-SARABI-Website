@@ -39,6 +39,14 @@
   document.querySelector("#technicalTitle").textContent = page.title;
   document.querySelector("#scopeList").innerHTML = page.scope.map(([a,b]) => `<article class="scope-item"><strong>${a}</strong><span>${b}</span></article>`).join("");
   document.querySelector("#technicalGrid").innerHTML = page.technical.map(([a,b]) => `<article><h3>${a}</h3><p>${b}</p></article>`).join("");
+  const productCategories = {"ceiling-lighting":["Downlights & Spotlights"],"wall-lights":["Wall Lighting"],"outdoor-lighting":["Inground Lighting","Flood Lighting","Street Lighting"]};
+  const related = window.ESHBELIA_CONTENT.catalogProducts.filter((product) => (productCategories[slug] || []).includes(product.category));
+  if (related.length) {
+    const section = document.createElement("section");
+    section.className = "related-products";
+    section.innerHTML = `<div class="eyebrow">Controlled Catalogue R01</div><h2>Registered products in this classification</h2><div class="related-product-grid">${related.map((product) => `<article><div><span>${product.category}</span><strong>${product.id}</strong></div><h3>${product.name}</h3><p>${product.summary}</p><small class="status ${product.status.includes("approval") ? "review" : ""}">${product.status}</small></article>`).join("")}</div><a class="text-link" href="products.html">Browse the complete product catalogue →</a>`;
+    document.querySelector("#technicalBand").insertAdjacentElement("afterend", section);
+  }
   const message = encodeURIComponent(`Hello ESHBELIA SARABI, I would like to enquire about ${title}.`);
   document.querySelector("#heroWhatsApp").href = `https://wa.me/971565565774?text=${message}`;
   document.querySelector("#waOne").href = `https://wa.me/971565565774?text=${message}`;
