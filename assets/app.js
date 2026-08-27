@@ -8,10 +8,10 @@
   const t = (o) => o?.[lang] || o?.en || o || "";
 
   const translations = {
-    about:{en:"About",ar:"عن الشركة"}, solutions:{en:"Solutions",ar:"الحلول"}, chandeliers:{en:"Chandeliers",ar:"الثريات"}, projects:{en:"Projects",ar:"المشاريع"}, contact:{en:"Contact",ar:"تواصل"},
+    about:{en:"About",ar:"عن الشركة"}, solutions:{en:"Classifications",ar:"التصنيفات"}, chandeliers:{en:"Chandeliers",ar:"الثريات"}, projects:{en:"Projects",ar:"المشاريع"}, contact:{en:"Contact",ar:"تواصل"},
     heroey:{en:"Engineering & Trading • UAE",ar:"هندسة وتجارة • الإمارات"}, herotitle:{en:"LIGHTING. CABLES. <span>PROJECT SOLUTIONS.</span>",ar:"إنارة. كوابل. <span>حلول مشاريع.</span>"}, herodesc:{en:"Project-focused lighting, custom chandelier, cable and electrical solutions with technical, tender and procurement support.",ar:"حلول متخصصة للمشاريع في الإنارة والثريات المخصصة والكوابل والأنظمة الكهربائية مع الدعم الفني والعطاءات والتوريد."},
     cta1:{en:"View Signature Chandeliers",ar:"شاهد مجموعة الثريات"}, cta2:{en:"Request a Quotation",ar:"طلب عرض سعر"}, abouth:{en:"Built around project requirements",ar:"حلول مبنية على متطلبات المشروع"}, aboutp:{en:"ESHBELIA SARABI supports developers, consultants, contractors, MEP contractors and procurement teams through product selection, tender support, value engineering, sourcing, technical coordination and supply follow-up.",ar:"تدعم إشبيلية سرابي المطورين والاستشاريين والمقاولين ومقاولي MEP وفرق المشتريات من خلال اختيار المنتجات ودعم العطاءات والهندسة القيمية والتوريد والتنسيق الفني ومتابعة التوريد."},
-    solutionh:{en:"Integrated lighting & cable solutions",ar:"حلول متكاملة للإنارة والكوابل"}, chandelierh:{en:"Top 20 signature chandeliers",ar:"أفضل 20 ثريا من المجموعة المميزة"}, chandelierp:{en:"A curated selection for mosques, palaces, atriums, hotels and landmark interiors. Select any model to view its original catalogue sheet.",ar:"تشكيلة مختارة للمساجد والقصور والردهات والفنادق والمساحات الداخلية البارزة. اختر أي موديل لعرض صفحة الكتالوج الأصلية."},
+    solutionh:{en:"Explore our 10 product classifications",ar:"استكشف تصنيفات منتجاتنا العشرة"}, classificationp:{en:"Each classification opens a dedicated page with its own key photo, scope and enquiry route.",ar:"يفتح كل تصنيف صفحة مستقلة تحتوي على صورته الرئيسية ونطاقه ومسار الاستفسار الخاص به."}, chandelierh:{en:"Top 20 signature chandeliers",ar:"أفضل 20 ثريا من المجموعة المميزة"}, chandelierp:{en:"A curated selection for mosques, palaces, atriums, hotels and landmark interiors. Select any model to view its original catalogue sheet.",ar:"تشكيلة مختارة للمساجد والقصور والردهات والفنادق والمساحات الداخلية البارزة. اختر أي موديل لعرض صفحة الكتالوج الأصلية."},
     projecth:{en:"Project reference register",ar:"سجل المشاريع المرجعية"}, projectp:{en:"Search and filter the management-supplied historical project register.",ar:"ابحث وصنف سجل المشاريع التاريخي المقدم من الإدارة."}, contacth:{en:"Send your RFQ",ar:"أرسل طلب العرض RFQ"}, contactp:{en:"Share your RFQ and our team will review the lighting or cable requirements and respond with a project-specific proposal.",ar:"أرسل RFQ وسيقوم فريقنا بمراجعة متطلبات الإنارة أو الكوابل والرد بعرض مخصص للمشروع."}
   };
 
@@ -27,7 +27,7 @@
   }
 
   function renderSolutions() {
-    $("#solutionsGrid").innerHTML = c.solutions.map((x) => `<article class="card"><div class="icon">${x.icon}</div><h3>${t(x.title)}</h3><p>${t(x.text)}</p></article>`).join("");
+    $("#solutionsGrid").innerHTML = c.classifications.map((x, index) => `<a class="classification-card" href="${x.slug}.html"><img src="${x.image}" alt="${t(x.title)}" loading="lazy"><span class="classification-number">${String(index + 1).padStart(2,"0")}</span><div><h3>${t(x.title)}</h3><p>${t(x.text)}</p><strong>${lang === "ar" ? "عرض التصنيف" : "View classification"} →</strong></div></a>`).join("");
     $("#process").innerHTML = c.process.map((x) => `<span class="step">${x}</span>`).join("");
   }
 
