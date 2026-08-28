@@ -11,7 +11,8 @@
 2. Restored the original chandelier hero photograph, gold serif company name, divider, headline treatment and two primary actions.
 3. Rebuilt the header lockup from the live gold chandelier mark plus a legible company name and descriptor; this removes the undersized logo problem.
 4. Matched the reference header/hero spacing, contrast, gold/green palette and desktop proportions. The implementation keeps the live visual character while using direct multi-page links.
-5. Added responsive breakpoints: the flat desktop navigation becomes a single controlled menu below 980 px; hero type and actions stack below 620 px with no horizontal overflow.
+5. Added responsive breakpoints: the flat desktop navigation becomes a single controlled menu below 1180 px; hero type and actions stack below 620 px with no horizontal overflow.
+6. Header correction at the reported 1087 px width: moved the responsive menu breakpoint to 1180 px and increased the logo/name separation. The measured mark edge is 24 px clear of the name, with no overlap and no horizontal overflow.
 
 ## Functional checks
 
@@ -20,5 +21,6 @@
 - Both WhatsApp links use the required `wa.me` numbers.
 - JavaScript syntax checks pass for navigation, homepage and product catalogue scripts.
 - Manufacturer page is reachable from the shared navigation.
+- Responsive interactive menu tested at 1087 px: closed state hides the navigation, the menu button opens it, and all nine destinations are present.
 
 final result: passed
