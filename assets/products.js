@@ -11,7 +11,7 @@
   let category = "All", visible = 24;
   const categories = ["All", ...new Set(products.map(product => product.category))];
   options.innerHTML = categories.map(item => `<button class="filter${item === "All" ? " active" : ""}" type="button" data-category="${item}">${item === "All" ? "All products" : item}</button>`).join("");
-  const setDrawer = open => { filters.classList.toggle("open", open); filters.setAttribute("aria-hidden", String(!open)); categoryToggle.setAttribute("aria-expanded", String(open)); categoryBackdrop.hidden = !open; document.body.classList.toggle("category-open", open); };
+  const setDrawer = open => { filters.classList.toggle("open", open); filters.setAttribute("aria-hidden", String(!open)); filters.inert = !open; categoryToggle.setAttribute("aria-expanded", String(open)); categoryBackdrop.hidden = !open; document.body.classList.toggle("category-open", open); (open ? categoryClose : categoryToggle).focus(); };
   const filteredProducts = () => { const query = search.value.trim().toLowerCase(); return products.filter(product => { const specs = Object.values(product.specs || {}).join(" "); return (category === "All" || product.category === category) && `${product.id} ${product.name} ${product.category} ${specs}`.toLowerCase().includes(query); }); };
   const card = product => {
     const specs = Object.entries(product.specs || {}).slice(0, 6);
