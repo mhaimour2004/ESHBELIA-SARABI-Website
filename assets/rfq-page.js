@@ -3,11 +3,7 @@
   const uaeButton = form.querySelector('button[type="submit"]');
   uaeButton.textContent = "Send to Procurement WhatsApp";
   uaeButton.dataset.whatsapp = "971555533432";
-  const jordanButton = uaeButton.cloneNode(true);
-  jordanButton.textContent = "Send to WhatsApp 5774";
-  jordanButton.dataset.whatsapp = "971565565774";
-  jordanButton.classList.replace("btn-gold", "btn-outline");
-  uaeButton.insertAdjacentElement("afterend", jordanButton);
+  uaeButton.textContent = "Send order by WhatsApp";
   const render = () => { const items = ESHBELIA_RFQ.get(); summary.textContent = `${items.length} product${items.length === 1 ? "" : "s"}`; list.innerHTML = items.length ? items.map(item => `<article class="rfq-item"><img src="${item.image || 'assets/brand/live-mark.png'}" alt=""><div><small>${item.category}</small><h3>${item.name}</h3><strong>${item.id}</strong></div><div class="rfq-item-controls"><label>Qty <input data-qty="${item.id}" type="number" min="1" value="${item.quantity}"></label><button class="rfq-remove" data-remove="${item.id}" type="button">Remove</button></div></article>`).join("") : `<div class="rfq-empty"><h2>Your basket is empty</h2><p>Add products, chandeliers, cables or wires before sending your request.</p><a class="btn btn-gold" href="products.html">Browse products</a></div>`; };
   list.addEventListener("change", event => { if (event.target.matches("[data-qty]")) ESHBELIA_RFQ.setQuantity(event.target.dataset.qty, event.target.value); });
   list.addEventListener("click", event => { const button = event.target.closest("[data-remove]"); if (button) ESHBELIA_RFQ.remove(button.dataset.remove); });
