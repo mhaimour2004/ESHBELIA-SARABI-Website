@@ -5,11 +5,14 @@
   const count = document.querySelector("#chandelierCount");
   const dialog = document.querySelector("#chandelierDialog");
   let selected = "All";
+  const productLink = item => new URL(`chandeliers.html#${encodeURIComponent(item.code)}`, new URL(".", location.href)).href;
+  const photoLink = item => new URL(item.image, location.href).href;
+  const whatsappLink = item => `https://wa.me/971565565774?text=${encodeURIComponent(`Hello ESHBELIA SARABI, I would like to enquire about ${item.name} (${item.code}).\n\nProduct: ${productLink(item)}\nPhoto: ${photoLink(item)}`)}`;
 
   const render = () => {
     const list = products.filter(item => selected === "All" || item.collection === selected);
     count.textContent = `${list.length} chandelier products`;
-    grid.innerHTML = list.map(item => `<article class="chandelier-card"><button class="chandelier-image" data-code="${item.code}" aria-label="View ${item.name} catalogue sheet"><img src="${item.image}" alt="${item.name}, model ${item.code}" loading="lazy"><span>View catalogue sheet</span></button><div class="chandelier-copy"><div class="product-kicker"><span>${item.collection}</span><strong>${item.code}</strong></div><h3>${item.name}</h3><dl><div><dt>Finish</dt><dd>${item.finish}</dd></div><div><dt>Material</dt><dd>${item.material}</dd></div><div><dt>Dimensions</dt><dd>${item.size}</dd></div><div><dt>Light source</dt><dd>${item.lights}</dd></div></dl><p><strong>Request price</strong><br><small>Quoted according to dimensions, finish and quantity.</small></p><button class="rfq-add" type="button" data-rfq-code="${item.code}">Add to RFQ</button><a class="product-enquiry" href="https://wa.me/971565565774?text=${encodeURIComponent(`Hello ESHBELIA SARABI, I would like to enquire about ${item.name} (${item.code}).`)}" target="_blank" rel="noopener">Enquire on WhatsApp</a></div></article>`).join("");
+    grid.innerHTML = list.map(item => `<article id="${item.code}" class="chandelier-card"><button class="chandelier-image" data-code="${item.code}" aria-label="View ${item.name} catalogue sheet"><img src="${item.image}" alt="${item.name}, model ${item.code}" loading="lazy"><span>View catalogue sheet</span></button><div class="chandelier-copy"><div class="product-kicker"><span>${item.collection}</span><strong>${item.code}</strong></div><h3>${item.name}</h3><dl><div><dt>Finish</dt><dd>${item.finish}</dd></div><div><dt>Material</dt><dd>${item.material}</dd></div><div><dt>Dimensions</dt><dd>${item.size}</dd></div><div><dt>Light source</dt><dd>${item.lights}</dd></div></dl><p><strong>Request price</strong><br><small>Quoted according to dimensions, finish and quantity.</small></p><button class="rfq-add" type="button" data-rfq-code="${item.code}">Add to basket</button><a class="product-enquiry" href="${whatsappLink(item)}" target="_blank" rel="noopener">WhatsApp</a></div></article>`).join("");
   };
 
   const collections = ["All", ...new Set(products.map(item => item.collection))];
@@ -27,7 +30,7 @@
       const product = products.find(item => item.code === rfqButton.dataset.rfqCode);
       ESHBELIA_RFQ.add({ id: product.code, name: product.name, category: "Chandeliers", image: product.image, price: null, currency: null });
       rfqButton.textContent = "Added ✓";
-      setTimeout(() => { rfqButton.textContent = "Add to RFQ"; }, 1400);
+      setTimeout(() => { rfqButton.textContent = "Add to basket"; }, 1400);
       return;
     }
     const button = event.target.closest(".chandelier-image");
@@ -37,7 +40,7 @@
     document.querySelector("#dialogImage").alt = `${item.name} catalogue sheet`;
     document.querySelector("#dialogTitle").textContent = item.name;
     document.querySelector("#dialogCode").textContent = item.code;
-    document.querySelector("#dialogWhatsApp").href = `https://wa.me/971565565774?text=${encodeURIComponent(`Hello ESHBELIA SARABI, I would like to enquire about ${item.name} (${item.code}).`)}`;
+    document.querySelector("#dialogWhatsApp").href = whatsappLink(item);
     dialog.showModal();
   });
   dialog.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
