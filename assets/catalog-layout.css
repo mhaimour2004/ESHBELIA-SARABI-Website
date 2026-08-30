@@ -45,7 +45,8 @@
 .price-line{padding-top:.45rem}
 .price-line strong{font-size:.96rem}
 .price-line span{font-size:.7rem;line-height:1.3}
-.shop-actions{grid-template-columns:1fr;gap:.38rem;margin-top:.55rem}
+.shop-actions{grid-template-columns:1fr 1fr;gap:.38rem;margin-top:.55rem}
+.shop-actions .rfq-add{grid-column:1/-1}
 .rfq-add,.shop-wa{min-height:38px;border-radius:6px;padding:.48rem .6rem;font-size:.78rem;font-weight:750}
 .shop-wa{background:#fff}
 .rfq-floating{right:16px;bottom:16px;padding:.65rem .82rem;border-radius:9px;font-size:.86rem;box-shadow:0 6px 18px rgba(0,0,0,.18)}
@@ -55,3 +56,5 @@
 @media(max-width:1200px){.catalog-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:900px){.catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:620px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.shop-card-body{padding:.6rem}.shop-card h2{font-size:.84rem}.rfq-add,.shop-wa{min-height:44px}.catalog-page .catalog-hero h1{font-size:clamp(1.85rem,9vw,2.35rem)}}
+.product-whatsapp-links{display:flex;gap:14px;flex-wrap:wrap}
+.rfq-panel button[type="submit"]+button[type="submit"]{margin-top:.55rem;border:1px solid rgba(255,255,255,.45);background:transparent;color:#fff}
