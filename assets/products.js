@@ -56,7 +56,15 @@
   categoryBackdrop.addEventListener("click", () => setDrawer(false));
   document.addEventListener("keydown", event => { if (event.key === "Escape") setDrawer(false); });
   addEventListener("resize", () => setDrawer(false));
-  search.addEventListener("input", () => { visible = 60; render(); });
+  search.addEventListener("input", () => {
+    if (search.value.trim()) {
+      category = "All";
+      activeCategory.textContent = language === "ar" ? "جميع التصنيفات" : "All products";
+      filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item.dataset.category === "All"));
+    }
+    visible = 60;
+    render();
+  });
   loadMore.addEventListener("click", () => { visible += 60; render(); });
   document.addEventListener("click", event => { const button = event.target.closest("[data-add]"); if (!button) return; const product = products.find(item => item.id === button.dataset.add); if (!product) return; ESHBELIA_RFQ.add(product); button.textContent = "Added ✓"; button.classList.add("added"); setTimeout(() => { button.textContent = "Add to basket"; button.classList.remove("added"); }, 1400); });
   grid.addEventListener("click", event => { const link = event.target.closest("[data-view]"); if (!link) return; event.preventDefault(); const product = products.find(item => item.id === link.dataset.view); if (product) openProduct(product); });
