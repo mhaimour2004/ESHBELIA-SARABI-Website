@@ -14,14 +14,25 @@
 .category-toggle b{max-width:180px;overflow:hidden;color:#e8cc8b;font-size:.78rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
 .category-toggle::before{content:"☰";font-size:1.05rem}
 .category-drawer{position:fixed;inset:0 auto 0 0;z-index:1001;display:block;width:min(360px,88vw);padding:1rem;overflow:auto;background:#f7f3ea;box-shadow:18px 0 50px rgba(0,0,0,.24);transform:translateX(-105%);transition:transform .22s ease}
+[dir="rtl"] .category-drawer{inset:0 0 0 auto;box-shadow:-18px 0 50px rgba(0,0,0,.24);transform:translateX(105%)}
 .category-drawer.open{transform:translateX(0)}
 .category-drawer-head{position:sticky;top:-1rem;z-index:1;display:flex;align-items:center;justify-content:space-between;margin:-1rem -1rem 1rem;padding:1.15rem;background:#0d3b2e;color:#fff}
 .category-drawer-head button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:transparent;color:#fff;font-size:1.6rem;cursor:pointer}
 .category-options{display:grid;gap:.45rem}
 .category-options .filter{width:100%;padding:.78rem .9rem;text-align:left}
+[dir="rtl"] .category-options .filter{text-align:right}
 .category-options .filter.active{background:#0d3b2e;color:#fff}
 .category-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(3,29,22,.08)}
 .category-open{overflow:hidden}
+@media(min-width:1100px){
+  .catalog-page main,.catalog-page .footer{margin-inline-start:280px}
+  .catalog-page .category-drawer{inset-block:130px 0;inset-inline-start:0;inset-inline-end:auto;width:280px;padding:.85rem;box-shadow:8px 0 22px rgba(0,0,0,.12);transform:none;transition:none}
+  [dir="rtl"] .catalog-page .category-drawer{inset-inline-start:0;inset-inline-end:auto;box-shadow:-8px 0 22px rgba(0,0,0,.12)}
+  .catalog-page .category-drawer-head{top:-.85rem;margin:-.85rem -.85rem .8rem;padding:.9rem}
+  .catalog-page .category-drawer-head button,.catalog-page .category-toggle,.catalog-page .category-backdrop{display:none}
+  .catalog-page .catalog-tools-row{grid-template-columns:minmax(240px,1fr) auto}
+  .catalog-page .category-open{overflow:auto}
+}
 :where(.catalog-page,.rfq-page) :where(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #e8bd55;outline-offset:3px}
 .rfq-page .rfq-hero{padding:clamp(1.6rem,3vw,2.75rem) 0}
 .rfq-hero-inner{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:clamp(1.5rem,3vw,3rem);align-items:end}

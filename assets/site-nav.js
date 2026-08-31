@@ -1,4 +1,7 @@
 (() => {
+  const language = localStorage.getItem("eshbelia_lang") || "en";
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   const current = location.pathname.split("/").pop() || "index.html";
   const header = document.querySelector(".header");
   if (!header) return;
@@ -17,5 +20,5 @@
   addEventListener("resize",()=>{if(innerWidth>980)close()});
   const langButton=header.querySelector("#langBtn");
   langButton.addEventListener("click",()=>{const next=(localStorage.getItem("eshbelia_lang")||"en")==="en"?"ar":"en";localStorage.setItem("eshbelia_lang",next);location.reload()});
-  if((localStorage.getItem("eshbelia_lang")||"en")==="ar")langButton.textContent="English";
+  if(language==="ar")langButton.textContent="English";
 })();
