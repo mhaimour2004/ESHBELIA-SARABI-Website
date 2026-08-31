@@ -45,6 +45,7 @@
 1. Initial implementation finding — P2: the fixed category rail started at 112 px and overlapped the sticky header by approximately 23 px.
 2. Fix: moved the rail start below the measured header boundary, first to 134 px and finally to 136 px.
 3. Post-fix evidence: header bottom measured 135.27 px and drawer top measured 136 px; the overlap is eliminated.
+4. Online-width check — P2: a 1280 px review viewport still showed five columns. The fallback breakpoint was tightened from 1320 px to 1199 px so common laptop widths now retain the requested six-card density.
 
 ## Findings
 
