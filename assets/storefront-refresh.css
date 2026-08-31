@@ -10,6 +10,10 @@
   --live-gold-light:#f2ca5b;
 }
 
+/* Stage 1 review sheets are portrait product documents; show the full sheet without cropping. */
+.catalog-page .shop-card-media{aspect-ratio:3/4;background:#fff}
+@media(max-width:520px){.catalog-page .shop-card-media{aspect-ratio:3/4}}
+
 .topbar{background:#0a4032}
 .header{background:rgba(14,80,62,.99);border-bottom-color:rgba(242,202,91,.34)}
 .btn-gold,.rfq-add,.rfq-floating,.site-nav .nav-quote{background:#e2b84f}

@@ -1,5 +1,10 @@
 (() => {
-  const imported = window.ESHBELIA_CATALOG || [];
+  const imported = (window.ESHBELIA_CATALOG || []).map(item => ({
+    ...item,
+    sourceImage: item.image,
+    image: `assets/sevilla-stage1/${item.id}.webp`,
+    approvalStage: "Stage 1 review"
+  }));
   const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
@@ -13,9 +18,8 @@
   }));
   const categoryMap = {"Switches & Controls":"Wiring Accessories","Floodlights":"Flood Lighting","Street Lights":"Street Lighting","Underground Lights":"Inground Lighting"};
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
-  // Products whose source photography exposes a back-office supplier identity stay in the private inventory only.
-  const privateOnlyIds = new Set(["ESH-AC-0103"]);
-  const products = [...new Map([...controlled, ...chandeliers, ...additions, ...imported].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA"}); return [product.id, product]; })).values()].filter(product => !privateOnlyIds.has(product.id));
+  // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
+  const products = [...new Map([...imported, ...additions, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA"}); return [product.id, product]; })).values()];
   const language = (localStorage.getItem("eshbelia_lang") || "en") === "ar" ? "ar" : "en";
   const grid = document.querySelector("#catalogGrid"), search = document.querySelector("#catalogSearch"), filters = document.querySelector("#catalogFilters"), options = document.querySelector("#categoryOptions"), count = document.querySelector("#catalogCount"), loadMore = document.querySelector("#loadMore");
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory");
