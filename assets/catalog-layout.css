@@ -70,3 +70,18 @@
 @media(max-width:620px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.shop-card-body{padding:.6rem}.shop-card h2{font-size:.84rem}.rfq-add,.shop-wa{min-height:44px}.catalog-page .catalog-hero h1{font-size:clamp(1.85rem,9vw,2.35rem)}}
 .product-whatsapp-links{display:flex;gap:14px;flex-wrap:wrap}
 .rfq-panel button[type="submit"]+button[type="submit"]{margin-top:.55rem;border:1px solid rgba(255,255,255,.45);background:transparent;color:#fff}
+.product-dialog{width:min(1040px,94vw);max-height:92vh;padding:0;border:0;border-radius:16px;background:#fff;color:#12372b;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.product-dialog::backdrop{background:rgba(2,24,18,.42)}
+.product-dialog-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);min-height:560px}
+.product-dialog-media{display:grid;place-items:center;min-height:560px;padding:1rem;overflow:auto;border:0;background:#f2f3ef;cursor:zoom-in}
+.product-dialog-media img{display:block;width:100%;max-height:76vh;object-fit:contain;transition:max-width .2s ease}
+.product-dialog-media img.enlarged{width:auto;max-width:none;max-height:none;cursor:zoom-out}
+.product-dialog-copy{align-self:center;padding:clamp(1.25rem,3vw,2.4rem)}
+.product-dialog-copy h2{margin:.55rem 0 .25rem;font-size:clamp(1.45rem,2.4vw,2.25rem);line-height:1.08}
+.product-dialog-copy>strong{color:#9a742d}
+.product-dialog-copy dl{display:grid;gap:.42rem;margin:1.2rem 0}
+.product-dialog-copy dl div{display:grid;grid-template-columns:minmax(80px,.8fr) 1.2fr;gap:.7rem;padding-top:.42rem;border-top:1px solid #e7ece8}
+.product-dialog-copy dt{font-weight:800}.product-dialog-copy dd{margin:0}
+.product-dialog-close{position:absolute;top:10px;right:10px;z-index:2;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:50%;background:#0d3b2e;color:#fff;font-size:1.5rem;cursor:pointer}
+[dir="rtl"] .product-dialog-close{right:auto;left:10px}
+@media(max-width:760px){.product-dialog{width:96vw;max-height:94vh}.product-dialog-layout{grid-template-columns:1fr;min-height:0}.product-dialog-media{min-height:280px;max-height:48vh}.product-dialog-copy{padding:1rem}.product-dialog-copy h2{font-size:1.35rem}.product-dialog-copy dl{max-height:150px;overflow:auto}.product-dialog-copy .shop-actions{grid-template-columns:1fr 1fr}}
