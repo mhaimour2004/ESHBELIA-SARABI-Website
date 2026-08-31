@@ -50,7 +50,7 @@
     history.replaceState(null, "", productLink(product)); productDialog.showModal();
   };
   const render = () => { const list = filteredProducts(); count.textContent = `${list.length} products`; grid.innerHTML = list.slice(0, visible).map(card).join("") || `<div class="rfq-empty"><h2>No matching products</h2><p>Try another category or search term.</p></div>`; loadMore.hidden = visible >= list.length; ESHBELIA_RFQ.updateBadges(); };
-  filters.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return; category = button.dataset.category; activeCategory.textContent = category === "All" ? "All products" : category; visible = 60; filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item === button)); if (!fixedMenu()) setDrawer(false); render(); });
+  filters.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return; category = button.dataset.category; search.value = ""; activeCategory.textContent = category === "All" ? "All products" : category; visible = 60; filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item === button)); if (!fixedMenu()) setDrawer(false); render(); });
   categoryToggle.addEventListener("click", () => setDrawer(!filters.classList.contains("open")));
   categoryClose.addEventListener("click", () => setDrawer(false));
   categoryBackdrop.addEventListener("click", () => setDrawer(false));
