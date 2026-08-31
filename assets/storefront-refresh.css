@@ -18,6 +18,33 @@
 .process{gap:7px}
 .step{padding:8px 11px;font-size:.78rem}
 
+/* Compact, consistent page rhythm shared with the product catalogue. */
+.page-hero{padding:2.2rem 0}
+.page-hero h1{max-width:820px;margin:.3rem 0 .65rem;font-size:clamp(1.8rem,3.8vw,3rem);line-height:1.05}
+.page-hero p{max-width:760px;margin:0;font-size:.92rem;line-height:1.55}
+.content-section,.section{padding:3.2rem 0}
+.section-head{max-width:720px;margin-bottom:1.6rem}
+.section-head h2{font-size:clamp(1.55rem,3vw,2.35rem)}
+.featured-link{min-height:280px;border-radius:10px}
+.featured-link div{padding:1.6rem}
+.featured-link h2{font-size:clamp(1.55rem,3vw,2.25rem)}
+.hero.live-hero,.hero.live-hero .hero-content{min-height:510px}
+.hero.live-hero .hero-content{padding:2.4rem 0}
+.hero-brand{padding-bottom:1rem}
+.hero-brand-name{font-size:clamp(2.5rem,5vw,4.2rem);line-height:.9}
+.hero-brand-desc{margin-top:.8rem;font-size:clamp(.75rem,1.4vw,1rem)}
+.hero-message{margin-top:1.25rem}
+.hero.live-hero h1{font-size:clamp(1.85rem,3.3vw,3rem)}
+.hero-actions{margin-top:1.25rem}
+.classification-hero{min-height:360px}
+.classification-hero .container{padding-bottom:2.5rem}
+.classification-hero h1{margin:.35rem 0 .65rem;font-size:clamp(2rem,4.4vw,3.8rem);line-height:1}
+.classification-main{padding:3rem 0}
+.classification-intro h2{font-size:clamp(1.55rem,3vw,2.25rem)}
+.scope-panel{padding:1.25rem;border-radius:10px}
+.technical-band{margin-top:2.2rem;padding:1.7rem;border-radius:12px}
+.classification-cta{margin-top:2.2rem;padding:1.7rem;border-radius:12px}
+
 .catalog-page .catalog-hero{padding:.72rem 0}
 .catalog-page .catalog-hero h1{margin:.15rem 0 0;font-size:clamp(1.3rem,2vw,1.8rem);line-height:1.05}
 .catalog-page .catalog-hero p{font-size:.82rem;line-height:1.45}
@@ -55,10 +82,20 @@
   .catalog-page .catalog-hero{padding:.6rem 0}
   .catalog-page .catalog-hero p{display:none}
   .catalog-page .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hero.live-hero,.hero.live-hero .hero-content{min-height:460px}
+  .classification-hero{min-height:320px}
 }
 @media(max-width:620px){
   .catalog-page .catalog-hero{display:none}
   .catalog-page .catalog-section{padding-top:.45rem}
   .catalog-page .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
   .catalog-page .shop-card h2{font-size:.75rem}
+  .hero.live-hero,.hero.live-hero .hero-content{min-height:430px}
+  .hero.live-hero .hero-content{padding:1.8rem 0}
+  .hero-brand-name{font-size:2.45rem}
+  .hero.live-hero h1{font-size:1.8rem}
+  .content-section,.section{padding:2.35rem 0}
+  .classification-hero{min-height:300px}
+  .classification-hero .container{padding-bottom:1.8rem}
+  .classification-main{padding:2.25rem 0}
 }

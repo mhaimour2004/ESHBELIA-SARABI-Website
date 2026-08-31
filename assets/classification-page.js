@@ -59,7 +59,13 @@
   document.querySelector("#classHeading").textContent = page.heading;
   document.querySelector("#classIntro").textContent = page.intro;
   document.querySelector("#technicalTitle").textContent = page.title;
-  document.querySelector("#scopeList").innerHTML = page.scope.map(([a,b]) => `<article class="scope-item"><div><strong>${a}</strong><span>${b}</span></div><img src="${item.image}" alt="${a} product example" loading="lazy"></article>`).join("");
+  document.querySelector("#scopeList").innerHTML = page.scope.map(([a,b]) => `<button class="scope-item" type="button" aria-label="Open ${a} image" data-scope-title="${a}"><div><strong>${a}</strong><span>${b}</span></div><img src="${item.image}" alt="${a} product example" loading="lazy"><span class="scope-open" aria-hidden="true">View image</span></button>`).join("");
+  document.querySelectorAll(".scope-item").forEach(scopeItem => {
+    scopeItem.addEventListener("click", () => {
+      imageTitle.textContent = `${title} — ${scopeItem.dataset.scopeTitle}`;
+      openImage();
+    });
+  });
   document.querySelector("#technicalGrid").innerHTML = page.technical.map(([a,b]) => `<article><h3>${a}</h3><p>${b}</p></article>`).join("");
   const productCategories = {"ceiling-lighting":["Downlights & Spotlights"],"wall-lights":["Wall Lighting"],"outdoor-lighting":["Inground Lighting","Flood Lighting","Street Lighting"]};
   const related = window.ESHBELIA_CONTENT.catalogProducts.filter((product) => (productCategories[slug] || []).includes(product.category));

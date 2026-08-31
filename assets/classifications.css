@@ -9,4 +9,7 @@
 .classification-image-dialog img{display:block;width:100%;max-height:82vh;object-fit:contain}
 .classification-image-dialog strong{display:block;padding:12px 4px 2px;color:#f0d58e}
 .classification-image-dialog button{position:absolute;top:20px;right:20px;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.45);border-radius:50%;background:#003b2b;color:#fff;font-size:1.6rem;cursor:pointer}
+.scope-item{position:relative;width:100%;font:inherit;text-align:start;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.scope-item:hover,.scope-item:focus-visible{border-color:#dba62f;box-shadow:0 6px 18px rgba(20,88,69,.12);transform:translateY(-1px);outline:0}
+.scope-open{position:absolute;inset-inline-end:112px;bottom:12px;color:#9a742d!important;font-size:.7rem!important;font-weight:800}
 [dir="rtl"] .classification-image-dialog button{right:auto;left:20px}
