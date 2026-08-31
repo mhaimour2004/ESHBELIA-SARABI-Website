@@ -59,10 +59,18 @@
   document.querySelector("#classHeading").textContent = page.heading;
   document.querySelector("#classIntro").textContent = page.intro;
   document.querySelector("#technicalTitle").textContent = page.title;
-  document.querySelector("#scopeList").innerHTML = page.scope.map(([a,b]) => `<button class="scope-item" type="button" aria-label="Open ${a} image" data-scope-title="${a}"><div><strong>${a}</strong><span>${b}</span></div><img src="${item.image}" alt="${a} product example" loading="lazy"><span class="scope-open" aria-hidden="true">View image</span></button>`).join("");
+  const scopeImages = slug === "chandeliers" ? {
+    "Mosques":"assets/chandeliers/msq-ch-004.jpg",
+    "Palaces & Villas":"assets/chandeliers/es-pl-030.jpg",
+    "Hospitality":"assets/chandeliers/es-ch-117.jpg",
+    "Custom Design":"assets/chandeliers/es-ch-004.jpg"
+  } : {};
+  document.querySelector("#scopeList").innerHTML = page.scope.map(([a,b]) => { const image = scopeImages[a] || item.image; return `<button class="scope-item" type="button" aria-label="Open ${a} image" data-scope-title="${a}" data-scope-image="${image}"><div><strong>${a}</strong><span>${b}</span></div><img src="${image}" alt="${a} product example" loading="lazy"><span class="scope-open" aria-hidden="true">View image</span></button>`; }).join("");
   document.querySelectorAll(".scope-item").forEach(scopeItem => {
     scopeItem.addEventListener("click", () => {
       imageTitle.textContent = `${title} — ${scopeItem.dataset.scopeTitle}`;
+      largeImage.src = scopeItem.dataset.scopeImage || item.image;
+      largeImage.alt = `${scopeItem.dataset.scopeTitle} chandelier example`;
       openImage();
     });
   });
