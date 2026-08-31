@@ -1,58 +1,59 @@
-# Product Catalogue Design QA
+# Design QA — Home Hero at 45% Scale
 
-- Source visual truth:
-  - `C:\Users\MBMH\AppData\Local\Temp\codex-clipboard-5f6c4a08-30a6-43b9-b66c-acfd475b7097.png` (Temu menu reference, 231 × 653 px)
-  - `C:\Users\MBMH\AppData\Local\Temp\codex-clipboard-23774581-68ff-4a7b-b50a-08222899d2b9.png` (Trendyol product-grid reference, 1293 × 716 px)
-- Implementation evidence:
-  - `C:\Users\MBMH\Documents\Codex\2026-08-27\referenced-chatgpt-conversation-this-is-an-3\outputs\2026-08-31_website-design-qa\2026-08-31_ESHBELIA_Product_Catalogue_Desktop.png` (1350 × 760 px)
-  - `C:\Users\MBMH\Documents\Codex\2026-08-27\referenced-chatgpt-conversation-this-is-an-3\outputs\2026-08-31_website-design-qa\2026-08-31_ESHBELIA_Product_Catalogue_Mobile.png` (375 × 812 px)
-- CSS viewport: 1365 × 768 desktop; 390 × 844 mobile.
-- Density normalization: browser captures and references were compared at CSS-pixel scale; no device frame or density resampling was required.
-- State: English, all products, category menu visible on desktop and closed by default on mobile.
+## Evidence
 
-## Full-view comparison evidence
+- Source visual truth: `C:\Users\MBMH\Downloads\Codex Image Aug 31, 2026, 07_52_15 PM.jpg`
+- Annotated desktop reference: `C:\Users\MBMH\AppData\Local\Temp\codex-clipboard-d42f04da-11a6-407e-b123-26c109407b46.png`
+- Final mobile implementation: `C:\Users\MBMH\Documents\Codex\2026-08-27\referenced-chatgpt-conversation-this-is-an-3\outputs\2026-08-31_hero-45-percent-qa\implementation-mobile-45-percent-final-v2.png`
+- Final desktop implementation: `C:\Users\MBMH\Documents\Codex\2026-08-27\referenced-chatgpt-conversation-this-is-an-3\outputs\2026-08-31_hero-45-percent-qa\implementation-desktop-45-percent-final-v2.png`
+- Side-by-side comparison: `C:\Users\MBMH\Documents\Codex\2026-08-27\referenced-chatgpt-conversation-this-is-an-3\outputs\2026-08-31_hero-45-percent-qa\comparison-mobile-side-by-side.png`
+- Requested browser viewport: 390 × 844 CSS px for mobile and 1360 × 768 CSS px for desktop.
+- Captured image pixels: source 375 × 769; mobile implementation 375 × 769; desktop implementation 1345 × 760.
+- Density normalization: source and final mobile capture have identical pixel dimensions; no density conversion was required for the final comparison.
+- State: English home page, menu closed, page at top.
 
-- The desktop implementation now follows the reference storefront density: six equal-width product cards across at the test viewport, a persistent narrow category rail, a single compact search row, and products visible above the fold.
-- The mobile implementation uses two cards per row, removes the promotional hero, and keeps the category rail behind a clear menu control.
-- The implementation retains ESHBELIA branding instead of copying Temu/Trendyol branding, while using their compact menu and product-grid proportions as requested.
+## Full-view comparison
 
-## Focused-region comparison evidence
+The final mobile implementation keeps the same content, hierarchy, background image, brand colors and actions while reducing the hero from approximately 448 px in the supplied previous-state screenshot to 205 px. This is approximately 46% of the supplied visual height. The first content section now begins immediately below the compact hero.
 
-- Menu: the ESHBELIA category rows match the compact 36 px rhythm and simple white/gray selected state of the Temu reference. The rail is 220 px wide, scrollable, and fixed below the header.
-- Product media: six consistent square 163 × 163 px image areas fit across the desktop content area, matching the six-card density of the Trendyol reference without cropping the supplied technical product images.
-- Card controls: product name, request-price state, Add to basket, WhatsApp, and datasheet remain readable in a narrower, more compact card.
+The final desktop hero measures approximately 208 px versus approximately 464 px in the annotated previous state, which is approximately 45% of the previous height.
+
+## Focused-region comparison
+
+The hero itself is fully legible in the side-by-side full capture, so an additional crop was not needed. The comparison clearly shows the brand name, descriptor, headline, supporting copy and both CTAs at the requested compact scale.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: passed. Inter/system fallbacks remain, with compact 12–13 px storefront text and a clear hierarchy. Labels wrap without clipping.
-- Spacing and layout rhythm: passed. Six desktop columns, two mobile columns, reduced gaps, compact toolbar, and a 220 px side rail use the available space efficiently. No horizontal overflow was found.
-- Colors and visual tokens: passed. Green was lightened to `#145845` / `#0e503e`; gold was brightened to `#e2b84f` / `#f2ca5b` with accessible dark text on gold buttons.
-- Image quality and asset fidelity: passed. Existing ESHBELIA product images and logo assets are preserved at consistent aspect ratios with `object-fit: contain`; no placeholders or recreated assets were introduced.
-- Copy and content: passed. Product names, ESHBELIA IDs, request-price messaging, basket actions, WhatsApp actions, and datasheet links remain intact.
-
-## Interaction and responsive checks
-
-- Category filtering: `Downlights & Spotlights` returned 6 products.
-- Search: `ESH-DL-0003` returned one matching product.
-- Mobile category drawer: opened and closed successfully.
-- Initial render: 60 product cards.
-- Infinite loading behavior remains enabled in 60-product increments.
-- Browser console: no errors or warnings.
-- Horizontal overflow: 0 px at desktop and mobile test widths.
+- Fonts and typography: Existing brand typography is preserved. Brand name is 24.8 px on mobile and 28 px on desktop; headline is 16.8 px on mobile and 18.88 px on desktop. Text remains readable and does not overflow.
+- Spacing and layout rhythm: Hero height is 205 px mobile and 208 px desktop. Vertical gaps, border rule, copy and CTA spacing were reduced proportionally. No content overflow was detected.
+- Colors and visual tokens: Existing dark green, gold, white and hero overlay are unchanged.
+- Image quality and asset fidelity: Existing hero photograph is unchanged. The previously empty `live-mark.png` was replaced with a clean transparent gold chandelier mark derived from the supplied company logo, and the browser reports a valid 600 × 566 image.
+- Copy and content: No headline, description, CTA or navigation copy was removed or rewritten.
 
 ## Comparison history
 
-1. Initial implementation finding — P2: the fixed category rail started at 112 px and overlapped the sticky header by approximately 23 px.
-2. Fix: moved the rail start below the measured header boundary, first to 134 px and finally to 136 px.
-3. Post-fix evidence: header bottom measured 135.27 px and drawer top measured 136 px; the overlap is eliminated.
-4. Online-width check — P2: a 1280 px review viewport still showed five columns. The fallback breakpoint was tightened from 1320 px to 1199 px so common laptop widths now retain the requested six-card density.
+### Iteration 1
 
-## Findings
+- P1: Hero remained materially larger than the requested 45% scale.
+- Fix: Reduced hero typography, vertical spacing, CTA dimensions and overall minimum height.
+- P1: Header logo source was a zero-byte file and displayed as a broken image for the user.
+- Fix: Rebuilt the mark from the supplied company logo, removed its background and restored it as a valid transparent asset.
 
-- No actionable P0, P1, or P2 differences remain.
+### Iteration 2
 
-## Follow-up polish
+- P2: Mobile reached the intended compact density, but desktop content still forced the hero to 255 px.
+- Fix: Reduced desktop brand, headline, supporting text, gaps and button measurements proportionally.
+- Post-fix evidence: Mobile hero 205 px; desktop hero 208 px; no overflow; no browser console errors.
 
-- P3: A later content pass could shorten unusually long category names, but current wrapping and scrolling remain usable.
+## Interaction checks
+
+- Request a Quote and Explore Products remain visible and actionable.
+- Responsive header and menu remain present.
+- Logo loads successfully.
+- Browser console errors checked: none.
+
+## Remaining findings
+
+No actionable P0, P1 or P2 differences remain against the user's explicit 45% size requirement.
 
 final result: passed

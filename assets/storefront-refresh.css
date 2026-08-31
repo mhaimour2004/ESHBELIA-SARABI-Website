@@ -17,6 +17,8 @@
 .card .icon{width:32px;height:32px;border-radius:7px;background:#fbf2d7;color:#a97812;font-size:.9rem}
 .process{gap:7px}
 .step{padding:8px 11px;font-size:.78rem}
+.brand-mark-crop{display:block;flex:0 0 76px;width:76px;height:72px;overflow:hidden}
+.brand-logo .brand-mark-crop img{display:block;width:100%!important;max-width:100%!important;height:100%!important;object-fit:contain!important}
 
 /* Compact, consistent page rhythm shared with the product catalogue. */
 .page-hero{padding:2.2rem 0}
@@ -28,14 +30,17 @@
 .featured-link{min-height:280px;border-radius:10px}
 .featured-link div{padding:1.6rem}
 .featured-link h2{font-size:clamp(1.55rem,3vw,2.25rem)}
-.hero.live-hero,.hero.live-hero .hero-content{min-height:510px}
-.hero.live-hero .hero-content{padding:2.4rem 0}
-.hero-brand{padding-bottom:1rem}
-.hero-brand-name{font-size:clamp(2.5rem,5vw,4.2rem);line-height:.9}
-.hero-brand-desc{margin-top:.8rem;font-size:clamp(.75rem,1.4vw,1rem)}
-.hero-message{margin-top:1.25rem}
-.hero.live-hero h1{font-size:clamp(1.85rem,3.3vw,3rem)}
-.hero-actions{margin-top:1.25rem}
+.hero.live-hero,.hero.live-hero .hero-content{min-height:205px}
+.hero.live-hero .hero-content{padding:.65rem 0}
+.hero-copy{width:min(610px,64%)}
+.hero-brand{padding-bottom:.45rem}
+.hero-brand-name{font-size:1.75rem;line-height:.92}
+.hero-brand-desc{margin-top:.25rem;font-size:.56rem;letter-spacing:.12em}
+.hero-message{margin-top:.42rem}
+.hero.live-hero h1{font-size:1.18rem;line-height:1.12;letter-spacing:-.01em}
+.hero.live-hero p{margin-top:.24rem;font-size:.68rem}
+.hero-actions{gap:.4rem;margin-top:.46rem}
+.hero-actions .btn{min-width:105px;padding:.4rem .58rem;border-radius:4px;font-size:.65rem}
 .classification-hero{min-height:360px}
 .classification-hero .container{padding-bottom:2.5rem}
 .classification-hero h1{margin:.35rem 0 .65rem;font-size:clamp(2rem,4.4vw,3.8rem);line-height:1}
@@ -77,23 +82,32 @@
 }
 
 @media(max-width:1199px) and (min-width:1100px){.catalog-page .catalog-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:1180px){.brand-mark-crop{flex-basis:60px;width:60px;height:58px}}
 @media(max-width:1099px) and (min-width:901px){.catalog-page .catalog-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:900px){
   .catalog-page .catalog-hero{padding:.6rem 0}
   .catalog-page .catalog-hero p{display:none}
   .catalog-page .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .hero.live-hero,.hero.live-hero .hero-content{min-height:460px}
+  .hero.live-hero,.hero.live-hero .hero-content{min-height:205px}
   .classification-hero{min-height:320px}
 }
 @media(max-width:620px){
+  .brand-mark-crop{flex-basis:48px;width:48px;height:46px}
   .catalog-page .catalog-hero{display:none}
   .catalog-page .catalog-section{padding-top:.45rem}
   .catalog-page .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
   .catalog-page .shop-card h2{font-size:.75rem}
-  .hero.live-hero,.hero.live-hero .hero-content{min-height:430px}
-  .hero.live-hero .hero-content{padding:1.8rem 0}
-  .hero-brand-name{font-size:2.45rem}
-  .hero.live-hero h1{font-size:1.8rem}
+  .hero.live-hero,.hero.live-hero .hero-content{min-height:205px}
+  .hero.live-hero .hero-content{padding:.38rem 0}
+  .hero-copy{width:100%}
+  .hero-brand{padding-bottom:.55rem}
+  .hero-brand-name{font-size:1.55rem}
+  .hero-brand-desc{font-size:.56rem;letter-spacing:.1em}
+  .hero-message{margin-top:.4rem}
+  .hero.live-hero h1{font-size:1.05rem;line-height:1.12}
+  .hero.live-hero p{font-size:.65rem}
+  .hero-actions{max-width:none;flex-direction:row;align-items:center;margin-top:.45rem}
+  .hero-actions .btn{min-width:0;padding:.4rem .5rem;font-size:.61rem}
   .content-section,.section{padding:2.35rem 0}
   .classification-hero{min-height:300px}
   .classification-hero .container{padding-bottom:1.8rem}
