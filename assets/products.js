@@ -1,5 +1,6 @@
 (() => {
   const imported = window.ESHBELIA_CATALOG || [];
+  const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
     specs: Object.fromEntries((item.specs || []).map((value, index) => [`Specification ${index + 1}`, value])),
@@ -10,8 +11,9 @@
     specs: { Collection: item.collection, Finish: item.finish, Material: item.material, Size: item.size, Lighting: item.lights },
     price: null, currency: null, pricingMode: "rfq", offeredBy: "ESHBELIA SARABI"
   }));
-  const normalize = product => ({ ...product, category: product.category === "Switches & Controls" ? "Wiring Accessories" : product.category });
-  const products = [...new Map([...controlled, ...chandeliers, ...imported].map(item => { const product = normalize(item); return [product.id, product]; })).values()];
+  const categoryMap = {"Switches & Controls":"Wiring Accessories","Floodlights":"Flood Lighting","Street Lights":"Street Lighting","Underground Lights":"Inground Lighting"};
+  const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
+  const products = [...new Map([...controlled, ...chandeliers, ...additions, ...imported].map(item => { const product = normalize(item); return [product.id, product]; })).values()];
   const language = (localStorage.getItem("eshbelia_lang") || "en") === "ar" ? "ar" : "en";
   const grid = document.querySelector("#catalogGrid"), search = document.querySelector("#catalogSearch"), filters = document.querySelector("#catalogFilters"), options = document.querySelector("#categoryOptions"), count = document.querySelector("#catalogCount"), loadMore = document.querySelector("#loadMore");
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory");

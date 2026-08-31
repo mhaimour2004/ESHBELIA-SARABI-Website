@@ -1,4 +1,10 @@
 (() => {
+  if (!document.querySelector('link[href="assets/multipage.css"]')) {
+    const multipageStyles = document.createElement("link");
+    multipageStyles.rel = "stylesheet";
+    multipageStyles.href = "assets/multipage.css";
+    document.head.append(multipageStyles);
+  }
   if (!document.querySelector('link[href="assets/storefront-refresh.css"]')) {
     const refreshStyles = document.createElement("link");
     refreshStyles.rel = "stylesheet";
