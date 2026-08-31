@@ -9,7 +9,7 @@
   const language = (localStorage.getItem("eshbelia_lang") || "en") === "ar" ? "ar" : "en";
   const grid = document.querySelector("#catalogGrid"), search = document.querySelector("#catalogSearch"), filters = document.querySelector("#catalogFilters"), options = document.querySelector("#categoryOptions"), count = document.querySelector("#catalogCount"), loadMore = document.querySelector("#loadMore");
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory");
-  let category = "All", visible = 30;
+  let category = "All", visible = 60;
   const categories = ["All", ...new Set(products.map(product => product.category))];
   options.innerHTML = categories.map(item => `<button class="filter${item === "All" ? " active" : ""}" type="button" data-category="${item}">${item === "All" ? "All products" : item}</button>`).join("");
   const fixedMenu = () => matchMedia("(min-width: 1100px)").matches;
@@ -33,19 +33,19 @@
     return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" aria-label="View ${product.name}"><img src="${product.image}" alt="${product.name}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.category}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}">${product.name}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${product.name} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
   };
   const render = () => { const list = filteredProducts(); count.textContent = `${list.length} products`; grid.innerHTML = list.slice(0, visible).map(card).join("") || `<div class="rfq-empty"><h2>No matching products</h2><p>Try another category or search term.</p></div>`; loadMore.hidden = visible >= list.length; ESHBELIA_RFQ.updateBadges(); };
-  filters.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return; category = button.dataset.category; activeCategory.textContent = category === "All" ? "All products" : category; visible = 30; filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item === button)); if (!fixedMenu()) setDrawer(false); render(); });
+  filters.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return; category = button.dataset.category; activeCategory.textContent = category === "All" ? "All products" : category; visible = 60; filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item === button)); if (!fixedMenu()) setDrawer(false); render(); });
   categoryToggle.addEventListener("click", () => setDrawer(!filters.classList.contains("open")));
   categoryClose.addEventListener("click", () => setDrawer(false));
   categoryBackdrop.addEventListener("click", () => setDrawer(false));
   document.addEventListener("keydown", event => { if (event.key === "Escape") setDrawer(false); });
   addEventListener("resize", () => setDrawer(false));
-  search.addEventListener("input", () => { visible = 30; render(); });
-  loadMore.addEventListener("click", () => { visible += 30; render(); });
+  search.addEventListener("input", () => { visible = 60; render(); });
+  loadMore.addEventListener("click", () => { visible += 60; render(); });
   grid.addEventListener("click", event => { const button = event.target.closest("[data-add]"); if (!button) return; const product = products.find(item => item.id === button.dataset.add); ESHBELIA_RFQ.add(product); button.textContent = "Added ✓"; button.classList.add("added"); setTimeout(() => { button.textContent = "Add to basket"; button.classList.remove("added"); }, 1400); });
   const requestedProduct = new URLSearchParams(location.search).get("product");
   if (requestedProduct && products.some(product => product.id === requestedProduct)) search.value = requestedProduct;
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting) && !loadMore.hidden) { visible += 30; render(); } }, { rootMargin: "500px 0px" });
+    const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting) && !loadMore.hidden) { visible += 60; render(); } }, { rootMargin: "700px 0px" });
     observer.observe(loadMore);
   }
   if (language === "ar") {

@@ -1,4 +1,10 @@
 (() => {
+  if (!document.querySelector('link[href="assets/storefront-refresh.css"]')) {
+    const refreshStyles = document.createElement("link");
+    refreshStyles.rel = "stylesheet";
+    refreshStyles.href = "assets/storefront-refresh.css";
+    document.head.append(refreshStyles);
+  }
   const language = localStorage.getItem("eshbelia_lang") || "en";
   document.documentElement.lang = language;
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
