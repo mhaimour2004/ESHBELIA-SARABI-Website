@@ -1,5 +1,6 @@
 (() => {
   const withheldImageIds = new Set([
+    "ESH-AC-0006", "ESH-AC-0007", "ESH-AC-0089", "ESH-AC-0090", "ESH-AC-0091", "ESH-AC-0092",
     "ESH-AC-0101", "ESH-AC-0102", "ESH-AC-0103", "ESH-AC-0104", "ESH-AC-0105", "ESH-AC-0106",
     "ESH-AC-0107", "ESH-AC-0108", "ESH-AC-0109", "ESH-AC-0115", "ESH-AC-0116", "ESH-AC-0117"
   ]);
