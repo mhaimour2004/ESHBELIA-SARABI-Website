@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+  <title id="title">Product image under review</title>
+  <desc id="description">Neutral ESHBELIA SARABI placeholder used while a supplier-free product image is prepared.</desc>
+  <rect width="1200" height="900" fill="#ffffff"/>
+  <rect x="30" y="30" width="1140" height="840" rx="28" fill="#f8f5ed" stroke="#d9a441" stroke-width="4"/>
+  <path d="M455 365h290v190H455z" fill="none" stroke="#0b4a3b" stroke-width="18"/>
+  <circle cx="545" cy="430" r="32" fill="#d9a441"/>
+  <path d="m475 525 95-82 70 58 48-39 57 63" fill="none" stroke="#0b4a3b" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+  <text x="600" y="655" fill="#0b4a3b" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" text-anchor="middle">PRODUCT IMAGE UNDER REVIEW</text>
+  <text x="600" y="720" fill="#9a6a12" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" letter-spacing="4" text-anchor="middle">ESHBELIA SARABI</text>
+</svg>

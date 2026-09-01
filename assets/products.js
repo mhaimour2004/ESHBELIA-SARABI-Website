@@ -1,8 +1,13 @@
 (() => {
+  const withheldImageIds = new Set([
+    "ESH-AC-0101", "ESH-AC-0102", "ESH-AC-0103", "ESH-AC-0104", "ESH-AC-0105", "ESH-AC-0106",
+    "ESH-AC-0107", "ESH-AC-0108", "ESH-AC-0109", "ESH-AC-0115", "ESH-AC-0116", "ESH-AC-0117"
+  ]);
   const imported = (window.ESHBELIA_CATALOG || []).map(item => ({
     ...item,
     sourceImage: item.image,
-    image: `assets/sevilla-stage1/${item.id}.webp`,
+    image: withheldImageIds.has(item.id) ? "assets/brand/product-image-under-review.svg" : `assets/sevilla-stage1/${item.id}.webp`,
+    imageWithheld: withheldImageIds.has(item.id),
     approvalStage: "Stage 1 review"
   }));
   const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
@@ -40,11 +45,16 @@
   };
   const filteredProducts = () => { const query = search.value.trim().toLowerCase(); return products.filter(product => { const specs = Object.values(product.specs || {}).join(" "); return (category === "All" || product.category === category) && `${product.id} ${product.name} ${product.category} ${specs}`.toLowerCase().includes(query); }); };
   const productLink = product => { const url = new URL("products.html", new URL(".", location.href)); url.searchParams.set("product", product.id); url.hash = product.id; return url.href; };
-  const imageLink = product => new URL(product.image, location.href).href;
+  const imageLink = product => product.imageWithheld ? null : new URL(product.image, location.href).href;
+  const whatsappMessage = product => {
+    const lines = [`Hello ESHBELIA SARABI, I would like to request a price for ${product.name} (${product.id}).`, "", `Product: ${productLink(product)}`];
+    const photo = imageLink(product); if (photo) lines.push(`Photo: ${photo}`);
+    return lines.join("\n");
+  };
   const card = product => {
     const specs = Object.entries(product.specs || {}).slice(0, 6);
     const price = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : `<strong>Request price</strong><span>${product.pricingMode === "pending-price-list" ? "Price list pending verification" : "Quoted according to quantity and project"}</span>`;
-    const message = encodeURIComponent(`Hello ESHBELIA SARABI, I would like to request a price for ${product.name} (${product.id}).\n\nProduct: ${productLink(product)}\nPhoto: ${imageLink(product)}`);
+    const message = encodeURIComponent(whatsappMessage(product));
     return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${product.name}"><img src="${product.image}" alt="${product.name}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${product.category}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${product.name}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${product.name} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
   };
   const openProduct = product => {
@@ -52,7 +62,7 @@
     dialogCategory.textContent = product.category; dialogTitle.textContent = product.name; dialogCode.textContent = product.id;
     dialogSpecs.innerHTML = Object.entries(product.specs || {}).map(([key,value]) => `<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>";
     dialogPrice.innerHTML = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : "<strong>Request price</strong><span>Quoted according to quantity and project</span>";
-    const message = encodeURIComponent(`Hello ESHBELIA SARABI, I would like to request a price for ${product.name} (${product.id}).\n\nProduct: ${productLink(product)}\nPhoto: ${imageLink(product)}`);
+    const message = encodeURIComponent(whatsappMessage(product));
     dialogWhatsapp.href = `https://wa.me/971555533432?text=${message}`; dialogAdd.dataset.add = product.id;
     dialogDatasheet.hidden = !product.datasheet; if (product.datasheet) dialogDatasheet.href = product.datasheet;
     history.replaceState(null, "", productLink(product)); productDialog.showModal();
