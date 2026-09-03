@@ -81,3 +81,11 @@ body:has(.product-dialog[open]){overflow:hidden}
  [dir=rtl] .product-dialog-close{left:auto;right:6px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+/* Arabic copy wraps naturally; IDs, phone numbers and source specifications stay legible. */
+html[dir="rtl"] body { font-family: Tahoma, Arial, sans-serif; }
+html[dir="rtl"] .hero-copy, html[dir="rtl"] .product-dialog-copy { text-align: start; }
+html[dir="rtl"] .brand strong, html[dir="rtl"] .hero-brand-name,
+html[dir="rtl"] .shop-card-meta strong, html[dir="rtl"] #productDialogCode,
+html[dir="rtl"] dd, html[dir="rtl"] a[href^="mailto:"],
+html[dir="rtl"] a[href^="https://wa.me/"] { unicode-bidi: plaintext; }
+html[dir="rtl"] #productDialogCode, html[dir="rtl"] .shop-card-meta strong { direction:ltr; display:inline-block; }

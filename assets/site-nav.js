@@ -1,7 +1,7 @@
 (() => {
   const compactStyles = document.createElement('link');
   compactStyles.rel = 'stylesheet';
-  compactStyles.href = 'assets/mobile-compact.css?v=20260904-1';
+  compactStyles.href = 'assets/mobile-compact.css?v=20260904-language-scroll';
   document.head.append(compactStyles);
   if (!document.querySelector('link[href^="assets/multipage.css"]')) {
     const multipageStyles = document.createElement("link");
@@ -47,4 +47,7 @@
   const langButton=header.querySelector("#langBtn");
   langButton.addEventListener("click",()=>{const next=(localStorage.getItem("eshbelia_lang")||"en")==="en"?"ar":"en";localStorage.setItem("eshbelia_lang",next);location.reload()});
   if(language==="ar")langButton.textContent="English";
+  const translations = document.createElement('script');
+  translations.src = 'assets/i18n.js?v=20260904-language-scroll';
+  document.body.append(translations);
 })();

@@ -92,7 +92,9 @@
     viewerControls.querySelector('output').textContent = `${Math.round(imageZoom * 100)}%`;
     viewerControls.querySelector('[data-zoom=out]').disabled = imageZoom === 1;
     viewerControls.querySelector('[data-zoom=in]').disabled = imageZoom === 4;
-    dialogImageHint.textContent = language === 'ar' ? 'تكبير • سحب الصورة • اسحب لأعلى أو أسفل للمنتج التالي أو السابق' : 'Zoom & drag • swipe up/down for next/previous when fitted';
+    dialogImageHint.textContent = imageZoom === 1
+      ? (language === 'ar' ? 'مرر أو اسحب لأعلى/أسفل لتبديل المنتج • استخدم + للتكبير' : 'Scroll or swipe up/down to change product • use + to zoom')
+      : (language === 'ar' ? 'اسحب أو مرر لتحريك الصورة • اختر ملاءمة لتبديل المنتجات' : 'Drag or scroll to pan • choose Fit to browse products');
   };
   dialogImage.addEventListener('load', () => setZoom(imageZoom));
   new ResizeObserver(() => { if(productDialog.open) setZoom(imageZoom); }).observe(dialogImageButton);
@@ -151,7 +153,7 @@
     document.body.classList.toggle("category-open", !fixedMenu() && open);
     if (!fixedMenu()) (open ? categoryClose : categoryToggle).focus();
   };
-  const filteredProducts = () => { const query = search.value.trim().toLowerCase(); return products.filter(product => { const specs = Object.values(product.specs || {}).join(" "); return (category === "All" || product.category === category) && `${product.id} ${product.name} ${product.category} ${specs}`.toLowerCase().includes(query); }); };
+  const filteredProducts = () => { const query = search.value.trim().toLowerCase(); const t = window.ESHBELIA_I18N?.t || (value => value); return products.filter(product => { const specs = Object.values(product.specs || {}).join(" "); return (category === "All" || product.category === category) && `${product.id} ${product.name} ${product.category} ${t(product.name)} ${t(product.category)} ${specs}`.toLowerCase().includes(query); }); };
   const productLink = product => { const url = new URL("products.html", new URL(".", location.href)); url.searchParams.set("product", product.id); url.hash = product.id; return url.href; };
   const imageLink = product => product.imageWithheld ? null : new URL(product.image, location.href).href;
   const whatsappMessage = product => {
@@ -248,7 +250,28 @@
     imagePointers.delete(event.pointerId); pinchDistance = 0; swipeStart = null; dragActive = false;
     dialogImageButton.classList.remove('dragging'); if(dialogImageButton.hasPointerCapture(event.pointerId)) dialogImageButton.releasePointerCapture(event.pointerId);
   };
-  dialogImageButton.addEventListener('wheel', event => {event.preventDefault(); setZoom(imageZoom + (event.deltaY < 0 ? .2 : -.2));}, {passive:false});
+  // One product per wheel/trackpad gesture, including its momentum tail.
+  // Technical details retain their own native scrolling; enlarged images pan.
+  let wheelTotal = 0, wheelLast = 0, wheelHandled = false;
+  dialogImageButton.addEventListener('wheel', event => {
+    if (event.ctrlKey) return; // Preserve the browser's accessibility zoom gesture.
+    event.preventDefault();
+    if (imageZoom > 1) {
+      dialogImageButton.scrollLeft += event.deltaX;
+      dialogImageButton.scrollTop += event.deltaY;
+      wheelTotal = 0; wheelHandled = false; wheelLast = performance.now();
+      return;
+    }
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    const now = performance.now();
+    if (now - wheelLast > 220) { wheelTotal = 0; wheelHandled = false; }
+    wheelLast = now;
+    if (wheelHandled) return;
+    const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? dialogImageButton.clientHeight : 1);
+    if (Math.sign(delta) !== Math.sign(wheelTotal)) wheelTotal = 0;
+    wheelTotal += delta;
+    if (Math.abs(wheelTotal) >= 40) { wheelHandled = true; moveProduct(wheelTotal > 0 ? 1 : -1); }
+  }, {passive:false});
   dialogImageButton.addEventListener("pointerup", stopImageDrag); dialogImageButton.addEventListener("pointercancel", stopImageDrag); dialogImage.addEventListener("dragstart", event => event.preventDefault());
   document.addEventListener("keydown", event => { if (!productDialog.open) return; if (event.key === "ArrowLeft") { event.preventDefault(); moveProduct(language === "ar" ? 1 : -1); } if (event.key === "ArrowRight") { event.preventDefault(); moveProduct(language === "ar" ? -1 : 1); } });
   productDialog.addEventListener("close", () => { productDialog.classList.remove('image-only'); imagePointers.clear(); dialogImage.classList.remove("enlarged"); dialogImageButton.classList.remove("dragging"); dragActive = false; history.replaceState(null, "", "products.html"); });
