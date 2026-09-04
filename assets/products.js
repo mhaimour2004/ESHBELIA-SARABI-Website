@@ -1,4 +1,8 @@
 (() => {
+  // Exact user photo approval, 2026-09-04. Family sheets intentionally approved.
+  const customerApprovedPhotos = {"ESH-DL-0001-A":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-B":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-C":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-D":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-SL-0001-A":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-B":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-C":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-D":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-DL-0002":"assets/products/ESH-DL-0002.jpg"};
+  const customerRejectedPhotos = new Set(["ESH-SW-0001","ESH-WL-0007","ESH-WL-0003","ESH-FL-0035","ESH-FL-0022","ESH-DL-0395","ESH-DL-0373","ESH-WL-0076","ESH-WL-0075","ESH-WL-0064","ESH-WL-0063","ESH-WL-0017","ESH-WL-0011","ESH-AC-0182"]);
+
   const withheldImageIds = new Set([
     "ESH-AC-0006", "ESH-AC-0007", "ESH-AC-0089", "ESH-AC-0090", "ESH-AC-0091", "ESH-AC-0092",
     "ESH-AC-0101", "ESH-AC-0102", "ESH-AC-0103", "ESH-AC-0104", "ESH-AC-0105", "ESH-AC-0106",
@@ -43,6 +47,8 @@
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
   // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
   const products = [...new Map([...imported, ...additions, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA"}); return [product.id, product]; })).values()].map(product => {
+    if (customerApprovedPhotos[product.id]) return {...product, image: customerApprovedPhotos[product.id], imageWithheld: false, approvalStage: "Customer-approved catalog image"};
+    if (customerRejectedPhotos.has(product.id)) return {...product, image: "assets/brand/product-image-under-review.svg", imageWithheld: true, approvalStage: "Image not approved by customer"};
     if (priorityPhotoIds.has(product.id)) return {
       ...product,
       image: `assets/sevilla-priority-review/${product.id}.webp`,
