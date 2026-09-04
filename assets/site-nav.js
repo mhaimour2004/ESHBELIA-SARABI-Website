@@ -50,4 +50,11 @@
   const translations = document.createElement('script');
   translations.src = 'assets/i18n.js?v=20260904-language-scroll';
   document.body.append(translations);
+  const efficientStyles = document.createElement('link');
+  efficientStyles.rel = 'stylesheet';
+  efficientStyles.href = 'assets/efficient-layout.css?v=20260904-icons-preview';
+  document.head.append(efficientStyles);
+  const interfaceIcons = document.createElement('script');
+  interfaceIcons.src = 'assets/ui-icons.js?v=20260904-icons-preview';
+  document.body.append(interfaceIcons);
 })();

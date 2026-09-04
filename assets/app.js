@@ -6,6 +6,16 @@
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
   const t = (o) => o?.[lang] || o?.en || o || "";
+  document.body.classList.add('home-page');
+  document.querySelector('.hero-brand-name br')?.replaceWith(document.createTextNode(' '));
+  // The homepage previews each collection. Dedicated pages retain all records.
+  const addPreviewLink = (grid, href, en, ar) => {
+    const link = document.createElement('a');
+    link.className = 'preview-link'; link.href = href; link.textContent = lang === 'ar' ? ar : en;
+    grid.after(link);
+  };
+  addPreviewLink($('#chandelierGrid'),'chandeliers.html','View all chandeliers →','عرض جميع الثريات ←');
+  addPreviewLink($('#projectGrid'),'projects.html','View all projects →','عرض جميع المشاريع ←');
 
   const translations = {
     about:{en:"About",ar:"عن الشركة"}, solutions:{en:"Classifications",ar:"التصنيفات"}, chandeliers:{en:"Chandeliers",ar:"الثريات"}, projects:{en:"Projects",ar:"المشاريع"}, contact:{en:"Contact",ar:"تواصل"},
@@ -32,7 +42,7 @@
   }
 
   function renderChandeliers() {
-    const list = c.chandeliers.filter((x) => chandelierCollection === "All" || x.collection === chandelierCollection);
+    const list = c.chandeliers.filter((x) => chandelierCollection === "All" || x.collection === chandelierCollection).slice(0, 8);
     $("#chandelierGrid").innerHTML = list.map((x) => `<article class="chandelier-card"><button class="chandelier-image" data-code="${x.code}" aria-label="View ${x.name} catalogue sheet"><img src="${x.image}" alt="${x.name}, model ${x.code}" loading="lazy"><span>View catalogue sheet</span></button><div class="chandelier-copy"><div class="product-kicker"><span>${x.collection}</span><strong>${x.code}</strong></div><h3>${x.name}</h3><dl><div><dt>Finish</dt><dd>${x.finish}</dd></div><div><dt>Material</dt><dd>${x.material}</dd></div><div><dt>Dimensions</dt><dd>${x.size}</dd></div><div><dt>Light source</dt><dd>${x.lights}</dd></div></dl><a class="product-enquiry" href="https://wa.me/971555533432?text=${encodeURIComponent(`Hello ESHBELIA SARABI, I would like to enquire about ${x.name} (${x.code}).`)}" target="_blank" rel="noopener">Enquire on WhatsApp</a></div></article>`).join("");
   }
 
@@ -66,9 +76,10 @@
 
   function renderProjects() {
     const q = ($("#projectSearch")?.value || "").toLowerCase();
-    const list = c.projects.filter((p) => (projectSector === "All" || p.sector === projectSector) && `${p.name} ${p.location} ${p.sector}`.toLowerCase().includes(q));
+    const matches = c.projects.filter((p) => (projectSector === "All" || p.sector === projectSector) && `${p.name} ${p.location} ${p.sector} ${window.ESHBELIA_I18N?.t(p.sector) || ''}`.toLowerCase().includes(q));
+    const list = matches.slice(0, 8);
     $("#projectGrid").innerHTML = list.map((p) => `<article class="project"><small>#${String(p.id).padStart(2,"0")} • ${p.sector}</small><h4>${p.name}</h4><p>${p.location}</p></article>`).join("") || "<p>No matching projects.</p>";
-    $("#projectCount").textContent = `${list.length} / ${c.projects.length}`;
+    $("#projectCount").textContent = lang === 'ar' ? `معاينة ${list.length} من ${matches.length}` : `Preview ${list.length} of ${matches.length}`;
   }
 
   function initProjectFilters() {
