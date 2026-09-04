@@ -1,4 +1,6 @@
 (() => {
+  const publishedReplacementPhotos = {"ESH-WL-0007":"assets/sevilla-final-20260904/ESH-WL-0007.webp","ESH-WL-0003":"assets/sevilla-final-20260904/ESH-WL-0003.webp","ESH-WL-0064":"assets/sevilla-final-20260904/ESH-WL-0064.webp","ESH-WL-0076":"assets/sevilla-final-20260904/ESH-WL-0076.webp","ESH-WL-0011":"assets/sevilla-final-20260904/ESH-WL-0011.webp","ESH-FL-0035":"assets/sevilla-final-20260904/ESH-FL-0035.webp","ESH-FL-0022":"assets/sevilla-final-20260904/ESH-FL-0022.webp","ESH-DL-0395":"assets/sevilla-final-20260904/ESH-DL-0395.webp","ESH-AC-0182":"assets/sevilla-final-20260904/ESH-AC-0182.webp","ESH-SW-0001":"assets/sevilla-final-20260904/ESH-SW-0001.webp"};
+
   // Exact user photo approval, 2026-09-04. Family sheets intentionally approved.
   const customerApprovedPhotos = {"ESH-DL-0001-A":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-B":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-C":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-DL-0001-D":"assets/product-sheets/full-quality/ESH-CAT-0001_page-11.jpg","ESH-SL-0001-A":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-B":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-C":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-SL-0001-D":"assets/product-sheets/full-quality/ESH-CAT-0001_page-34.jpg","ESH-DL-0002":"assets/products/ESH-DL-0002.jpg"};
   const customerRejectedPhotos = new Set(["ESH-SW-0001","ESH-WL-0007","ESH-WL-0003","ESH-FL-0035","ESH-FL-0022","ESH-DL-0395","ESH-DL-0373","ESH-WL-0076","ESH-WL-0075","ESH-WL-0064","ESH-WL-0063","ESH-WL-0017","ESH-WL-0011","ESH-AC-0182"]);
@@ -47,6 +49,7 @@
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
   // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
   const products = [...new Map([...imported, ...additions, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA"}); return [product.id, product]; })).values()].map(product => {
+    if (publishedReplacementPhotos[product.id]) return {...product, image: publishedReplacementPhotos[product.id], imageWithheld: false, approvalStage: "SEVILLA commercial product rendering"};
     if (customerApprovedPhotos[product.id]) return {...product, image: customerApprovedPhotos[product.id], imageWithheld: false, approvalStage: "Customer-approved catalog image"};
     if (customerRejectedPhotos.has(product.id)) return {...product, image: "assets/brand/product-image-under-review.svg", imageWithheld: true, approvalStage: "Image not approved by customer"};
     if (priorityPhotoIds.has(product.id)) return {
