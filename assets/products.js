@@ -37,7 +37,10 @@
     imageWithheld: withheldImageIds.has(item.id),
     approvalStage: "Stage 1 review"
   }));
-  const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
+  const additions = [
+    ...(window.ESHBELIA_CATALOG_ADDITIONS || []),
+    ...(window.SEVILLA_NEW_PRODUCTS_PUBLIC || [])
+  ];
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
     specs: Object.fromEntries((item.specs || []).map((value, index) => [`Specification ${index + 1}`, value])),
