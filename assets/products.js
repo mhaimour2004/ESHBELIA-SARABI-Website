@@ -84,6 +84,9 @@
   document.querySelectorAll('[data-en]').forEach(element => {
     element.textContent = element.dataset[language];
   });
+  requestAnimationFrame(() => document.querySelectorAll('[data-en]').forEach(element => {
+    element.textContent = element.dataset[language];
+  }));
   const grid = document.querySelector("#catalogGrid"), search = document.querySelector("#catalogSearch"), filters = document.querySelector("#catalogFilters"), options = document.querySelector("#categoryOptions"), count = document.querySelector("#catalogCount"), loadMore = document.querySelector("#loadMore");
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory"), categoryRailPrev = document.querySelector("#categoryRailPrev"), categoryRailNext = document.querySelector("#categoryRailNext");
   const productDialog = document.querySelector("#productDialog"), dialogClose = document.querySelector("#productDialogClose"), dialogPrev = document.querySelector("#productDialogPrev"), dialogNext = document.querySelector("#productDialogNext"), dialogImageButton = document.querySelector("#productDialogImageButton"), dialogImage = document.querySelector("#productDialogImage"), dialogImageHint = document.querySelector("#productDialogImageHint"), dialogCategory = document.querySelector("#productDialogCategory"), dialogTitle = document.querySelector("#productDialogTitle"), dialogCode = document.querySelector("#productDialogCode"), dialogSpecs = document.querySelector("#productDialogSpecs"), dialogPrice = document.querySelector("#productDialogPrice"), dialogAdd = document.querySelector("#productDialogAdd"), dialogWhatsapp = document.querySelector("#productDialogWhatsapp"), dialogDatasheet = document.querySelector("#productDialogDatasheet");
