@@ -10,3 +10,9 @@
 .sevilla-public-page .shop-card-meta span{max-width:65%}
 .sevilla-public-page .product-dialog-media img{width:100%;height:100%;object-fit:contain}
 @media(max-width:600px){.sevilla-public-tools{top:64px;padding:.6rem}.sevilla-public-page .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.sevilla-public-page .shop-card-body{padding:.65rem}.sevilla-public-page .shop-card h2{font-size:.82rem}.sevilla-public-page .shop-card-meta{font-size:.62rem}.sevilla-public-page .shop-actions{grid-template-columns:1fr}.sevilla-public-page .shop-wa{font-size:.72rem;padding:.55rem}.sevilla-public-page .price-line strong{font-size:.9rem}}
+
+/* Verified product-media sizing: 20260910 */
+.sevilla-public-page .shop-card-media{position:relative;display:block;flex:0 0 auto;width:100%;height:auto;min-height:0;aspect-ratio:1/1;padding:0;margin:0;box-sizing:border-box;background:#fff;line-height:0}
+.sevilla-public-page .shop-card-media img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;transform:none}
+.sevilla-public-tools{top:var(--header-height,72px)}
+@media(max-width:700px){.sevilla-public-page .shop-card{height:auto;min-height:0}.sevilla-public-page .shop-card-body{overflow:visible}.sevilla-public-tools{grid-template-columns:minmax(0,1fr) auto}.sevilla-public-tools .search{grid-column:1/-1;min-width:0}.sevilla-public-tools .note{grid-column:1/-1}}

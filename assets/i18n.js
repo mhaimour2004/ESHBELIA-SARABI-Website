@@ -3,6 +3,12 @@
   // values remain untouched, so filtering, enquiries and specifications keep their identity.
   const arabic = document.documentElement.lang === 'ar';
   const pairs = {
+    'Switches & Sockets':'المفاتيح والمقابس', 'Distribution Equipment':'معدات التوزيع الكهربائي',
+    'Cables':'الكوابل', 'Downlights':'الداون لايت', 'Lighting':'الإنارة', 'LED Lamps':'مصابيح LED',
+    'Pest Control Appliances':'أجهزة مكافحة الحشرات', 'Extension Sockets':'مقابس التمديد',
+    'Drainage Accessories':'ملحقات التصريف', 'Door Bells':'أجراس الأبواب', 'Electrical Accessories':'الملحقات الكهربائية',
+    'High-Bay Lights':'إنارة هاي باي', 'LED Tubes':'أنابيب LED', 'Surface Lighting':'الإنارة السطحية',
+    'Ventilation':'التهوية', 'Waterproof Lighting':'إنارة مقاومة للماء', 'All types':'جميع الأنواع', 'Product type':'نوع المنتج',
     'Home':'الرئيسية', 'About':'عن الشركة', 'About Us':'عن الشركة', 'Solutions':'الحلول', 'Services':'الخدمات',
     'Products':'المنتجات', 'Projects':'المشاريع', 'Manufacturers':'المصنّعون', 'Contact':'تواصل معنا', 'Contact Us':'تواصل معنا',
     'Menu':'القائمة', 'Main navigation':'القائمة الرئيسية', 'Product Catalogue':'كتالوج المنتجات', 'Basket':'السلة',
@@ -81,13 +87,14 @@
     'Browse lighting, electrical products, chandeliers, cables and wires. Add products to your basket, then send the complete list to our team.':'تصفّح الإنارة والمنتجات الكهربائية والثريات والكوابل والأسلاك. أضف المنتجات إلى السلة ثم أرسل القائمة كاملة إلى فريقنا.',
     'One catalogue. One basket.':'كتالوج واحد. سلة واحدة.',
     'Published prices appear only when supported by an approved current price list. Chandeliers, cables, wires and project products are priced according to specifications and quantities.':'تُعرض الأسعار فقط عند توفر قائمة أسعار سارية ومعتمدة. تُسعّر الثريات والكوابل والأسلاك ومنتجات المشاريع وفق المواصفات والكميات.',
-    'verified catalogue records available for selection':'سجلات منتجات موثقة متاحة للاختيار', 'Product publications':'إصدارات المنتجات',
+    'verified catalogue records available for selection':'سجلات منتجات موثقة متاحة للاختيار',
+    'catalogue records available for selection; image and technical review in progress':'سجلات منتجات متاحة للاختيار؛ مراجعة الصور والبيانات الفنية قيد التنفيذ', 'offline catalogue records available for selection; image and technical review in progress':'سجلات الكتالوج المحلي متاحة للاختيار؛ مراجعة الصور والبيانات الفنية قيد التنفيذ', 'Product publications':'إصدارات المنتجات',
     'SEVILLA product sheets are undergoing technical-content and image-quality review before release.':'تخضع صفحات منتجات SEVILLA لمراجعة المحتوى الفني وجودة الصور قبل الإصدار.',
     'SEVILLA A4 Product Sheets — Batch 01':'صفحات منتجات SEVILLA بحجم A4 — الدفعة 01',
     '32 product pages • A4 portrait • Revision in progress':'32 صفحة منتج • A4 عمودي • المراجعة قيد التنفيذ',
     'Download temporarily unavailable while technical details are corrected.':'التنزيل غير متاح مؤقتاً لحين تصحيح التفاصيل الفنية.',
     'Individual legacy datasheets are being revalidated before they are presented as approved Lighting Catalogs.':'تُراجع صفحات البيانات السابقة قبل تقديمها ككتالوجات إنارة معتمدة.',
-    'Categories':'التصنيفات', 'All products':'جميع المنتجات', 'Product categories':'تصنيفات المنتجات', 'Load more':'عرض المزيد',
+    'Categories':'التصنيفات', 'All products':'جميع المنتجات', 'Product categories':'تصنيفات المنتجات', 'All classifications':'جميع التصنيفات', 'Most products first':'الأكثر منتجات أولاً', 'French Wall Lighting':'الإنارة الجدارية الفرنسية', 'French Street & Post Lighting':'إنارة الشوارع والأعمدة الفرنسية', 'French Decorative Lighting':'الإنارة الديكورية الفرنسية', 'LED Tubes & Fixtures':'أنابيب ووحدات LED', 'LED Mirror Lights':'إنارة مرايا LED', 'Recessed Modular Luminaires':'وحدات إنارة معيارية غاطسة', 'Recessed Downlights':'داون لايت غاطس', 'Recessed Trimless Spots':'سبوت لايت غاطس بدون إطار', 'Surface-Mounted Modular Luminaires':'وحدات إنارة معيارية سطحية', 'Surface-Mounted Downlights':'داون لايت سطحي', 'LED Directional Lights':'إنارة LED موجهة', 'LED Drivers':'مشغلات LED', 'LED Emergency Units':'وحدات طوارئ LED', 'Garden & Landscape Lighting':'إنارة الحدائق والمناظر الطبيعية', 'Pool Lighting':'إنارة المسابح', 'Solar Lighting':'إنارة شمسية', 'Linear Lighting':'إنارة خطية', 'Modern Electric Track':'مسار كهربائي حديث', 'Desktop Popup Sockets':'مقابس مكتبية منبثقة', 'Source technical row':'صف البيانات الفنية من المصدر', 'Load more':'عرض المزيد',
     'Search product, ESHBELIA ID or specification':'ابحث بالمنتج أو كود ESHBELIA أو المواصفات', 'Search products':'البحث عن المنتجات',
     'Product category filters':'تصفية تصنيفات المنتجات', 'Details':'التفاصيل', 'Request price':'اطلب السعر',
     'Published product price':'السعر المنشور للمنتج', 'Price list pending verification':'قائمة الأسعار قيد التحقق',
@@ -205,6 +212,8 @@
     if (!arabic || !value) return value;
     const key = normalize(value);
     let result = dictionary.get(key);
+    const counted = key.match(/^(.+) \((\d+)\)$/);
+    if (!result && counted && dictionary.has(counted[1])) result = `${dictionary.get(counted[1])} (${counted[2]})`;
     if (!result && /^\d+ products?$/.test(key)) result = `${key.split(' ')[0]} منتج`;
     // Only split explicit UI separators; never replace arbitrary substrings in codes/specs.
     if (!result && / (?:·|•|—|\||-) /.test(key)) result = key.split(/( (?:·|•|—|\||-) )/).map((part, i) => i % 2 ? part : translate(part)).join('');

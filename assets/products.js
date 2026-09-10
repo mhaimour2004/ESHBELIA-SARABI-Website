@@ -37,10 +37,46 @@
     imageWithheld: withheldImageIds.has(item.id),
     approvalStage: "Stage 1 review"
   }));
-  const additions = [
-    ...(window.ESHBELIA_CATALOG_ADDITIONS || []),
-    ...(window.SEVILLA_NEW_PRODUCTS_PUBLIC || [])
-  ];
+  const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
+  const commercialPreviews = (window.SEVILLA_NEW_PRODUCTS_PUBLIC || []).map(item => ({...item, brand:"SEVILLA by ESHBELIA SARABI"}));
+  const frenchReviews = (window.SEVILLA_FRENCH_R04_PRODUCTS || []).map(item => ({
+    id:item.id,
+    brand:item.brand,
+    name:item.nameEn,
+    nameAr:item.nameAr,
+    category:item.categoryEn,
+    categoryAr:item.categoryAr,
+    categorySlug:"french-lighting-r04",
+    image:item.image,
+    imageWithheld:true,
+    specs:{},
+    price:null,
+    currency:null,
+    pricingMode:"rfq",
+    offeredBy:"ESHBELIA SARABI",
+    localPhotoReview:false,
+    approvalStage:"Product approved; final product image pending",
+    releaseState:"COMMERCIAL_PREVIEW"
+  }));
+  const lightingCollectionReviews = (window.SEVILLA_LIGHTING_COLLECTION_R03_PRODUCTS || []).map(item => ({
+    id:item.id,
+    brand:"SEVILLA by ESHBELIA SARABI",
+    name:item.nameEn,
+    nameAr:item.nameAr,
+    category:item.categoryEn,
+    categoryAr:item.categoryAr,
+    categorySlug:"lighting-collection-r03",
+    image:item.image,
+    imageWithheld:true,
+    specs:{},
+    price:null,
+    currency:null,
+    pricingMode:"rfq",
+    offeredBy:"ESHBELIA SARABI",
+    localPhotoReview:false,
+    approvalStage:"Product approved; final product image pending",
+    releaseState:"COMMERCIAL_PREVIEW"
+  }));
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
     specs: Object.fromEntries((item.specs || []).map((value, index) => [`Specification ${index + 1}`, value])),
@@ -54,9 +90,12 @@
   const categoryMap = {"Switches & Controls":"Wiring Accessories","Floodlights":"Flood Lighting","Street Lights":"Street Lighting","Underground Lights":"Inground Lighting"};
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
   // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
-  const products = [...new Map([...imported, ...additions, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA"}); return [product.id, product]; })).values()].map(product => {
+  const products = [...new Map([...imported, ...additions, ...commercialPreviews, ...frenchReviews, ...lightingCollectionReviews, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA by ESHBELIA SARABI"}); return [product.id, product]; })).values()].map(product => {
     if (pendingPublicationPhotos[product.id]) return {...product,image:pendingPublicationPhotos[product.id],imageWithheld:false,approvalStage:'New commercial rendering - local preview; publication pending'};
     if (customerApprovedPhotos[product.id]) return {...product,image:customerApprovedPhotos[product.id],imageWithheld:false,approvalStage:'Customer-approved catalog image'};
+    if (product.id === 'ESH-AC-0019') return {...product,image:'assets/sevilla-batch02-review/ESH-AC-0019-white-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'SEVILLA lettering corrected - local review only; technical clarification pending'};
+    if (product.id === 'ESH-AC-0050') return {...product,image:'assets/sevilla-final-20260904/ESH-AC-0050-review-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'Five-unit rendering — local review only; exact variant mapping pending'};
+    if (product.id === 'ESH-WL-0063') return {...product,image:'assets/sevilla-final-20260904/ESH-WL-0063-review-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'Front-view rendering — local review only; exact product approval pending'};
     if (customerRejectedPhotos.has(product.id)) return {...product,image:'assets/brand/product-image-under-review.svg',imageWithheld:true,approvalStage:'Image not approved by customer'};
     if (presentationHolds.includes(product.id)) return {...product, image: 'assets/brand/product-image-under-review.svg', imageWithheld: true, approvalStage: 'Image presentation under review'};
     if (reviewedPhotoUpdates[product.id]) return {...product, image: reviewedPhotoUpdates[product.id], imageWithheld: false, approvalStage: 'White product photo - local approval preview'};
@@ -80,13 +119,16 @@
     };
     return product;
   });
+  // Exact, source-reviewed identity removal only. Never strip arbitrary alphanumeric
+  // strings: they may be technical ratings, dimensions or valid SEVILLA IDs.
+  const wallLight = products.find(product => product.id === 'ESH-WL-0064');
+  if (wallLight?.specs?.['Available options']) {
+    wallLight.specs = {...wallLight.specs, 'Available options': wallLight.specs['Available options']
+      .replace(/^B142\s*-\s*/, '').replace(/(\|\s*)B143\s*-\s*/, '$1')};
+  }
   const language = (localStorage.getItem("eshbelia_lang") || "en") === "ar" ? "ar" : "en";
-  document.querySelectorAll('[data-en]').forEach(element => {
-    element.textContent = element.dataset[language];
-  });
-  requestAnimationFrame(() => document.querySelectorAll('[data-en]').forEach(element => {
-    element.textContent = element.dataset[language];
-  }));
+  const productName = product => language === "ar" && product.nameAr ? product.nameAr : product.name;
+  const productCategory = product => language === "ar" && product.categoryAr ? product.categoryAr : product.category;
   const grid = document.querySelector("#catalogGrid"), search = document.querySelector("#catalogSearch"), filters = document.querySelector("#catalogFilters"), options = document.querySelector("#categoryOptions"), count = document.querySelector("#catalogCount"), loadMore = document.querySelector("#loadMore");
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory"), categoryRailPrev = document.querySelector("#categoryRailPrev"), categoryRailNext = document.querySelector("#categoryRailNext");
   const productDialog = document.querySelector("#productDialog"), dialogClose = document.querySelector("#productDialogClose"), dialogPrev = document.querySelector("#productDialogPrev"), dialogNext = document.querySelector("#productDialogNext"), dialogImageButton = document.querySelector("#productDialogImageButton"), dialogImage = document.querySelector("#productDialogImage"), dialogImageHint = document.querySelector("#productDialogImageHint"), dialogCategory = document.querySelector("#productDialogCategory"), dialogTitle = document.querySelector("#productDialogTitle"), dialogCode = document.querySelector("#productDialogCode"), dialogSpecs = document.querySelector("#productDialogSpecs"), dialogPrice = document.querySelector("#productDialogPrice"), dialogAdd = document.querySelector("#productDialogAdd"), dialogWhatsapp = document.querySelector("#productDialogWhatsapp"), dialogDatasheet = document.querySelector("#productDialogDatasheet");
@@ -126,8 +168,35 @@
     if (action === 'full') { productDialog.classList.toggle('image-only'); requestAnimationFrame(() => setZoom(1)); }
     else if(action) setZoom(action === 'fit' ? 1 : imageZoom + (action === 'in' ? .5 : -.5));
   });
-  const categories = ["All", ...new Set(products.map(product => product.category))];
-  options.innerHTML = categories.map(item => `<button class="filter${item === "All" ? " active" : ""}" type="button" data-category="${item}">${item === "All" ? "All products" : item}</button>`).join("");
+  const pageParams = new URLSearchParams(location.search);
+  const requestedCollection = pageParams.get("collection");
+  const catalogProducts = requestedCollection ? products.filter(product => product.categorySlug === requestedCollection) : products;
+  const taxonomy = window.ESHBELIA_TAXONOMY;
+  const fullCategoryCounts = products.reduce((totals, product) => totals.set(product.category, (totals.get(product.category) || 0) + 1), new Map());
+  window.ESHBELIA_PRODUCT_CLASSIFICATIONS = [...fullCategoryCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  const categoryCounts = catalogProducts.reduce((totals, product) => totals.set(product.category, (totals.get(product.category) || 0) + 1), new Map());
+  const divisions = taxonomy ? taxonomy.groups([...categoryCounts]) : [];
+  const solarCount = catalogProducts.filter(product=>/solar/i.test(product.category)).length;
+  const categories = taxonomy ? ['All',...divisions.map(group=>'@'+group.id),...(solarCount?['@SOLAR']:[])] : ['All',...categoryCounts.keys()];
+  const filterLabel = item => item === 'All' ? (language==='ar'?'جميع المنتجات':'All products') : item === '@SOLAR' ? (language==='ar'?'الإنارة الشمسية':'Solar Lighting') : item.startsWith('@') ? taxonomy.label(divisions.find(group=>'@'+group.id===item),language) : (window.ESHBELIA_I18N?.t?.(item)||item);
+  const filterCount = item => item==='All' ? catalogProducts.length : item==='@SOLAR' ? solarCount : item.startsWith('@') ? divisions.find(group=>'@'+group.id===item)?.total||0 : categoryCounts.get(item)||0;
+  const requestedCategory = pageParams.get("category");
+  if (requestedCategory && categoryCounts.has(requestedCategory)) category = requestedCategory;
+  else if(pageParams.get('solar')==='1'&&solarCount)category='@SOLAR';
+  else if(divisions.some(group=>group.id===pageParams.get('division')))category='@'+pageParams.get('division');
+  search.value=pageParams.get('q')||'';
+  options.innerHTML = categories.map(item => `<button class="filter${item === category ? " active" : ""}" type="button" data-category="${item}"><span>${filterLabel(item)}</span><b>${filterCount(item)}</b></button>`).join("");
+  activeCategory.textContent = filterLabel(category);
+  const typeLabel=document.createElement('label');typeLabel.className='catalog-type-label';
+  typeLabel.innerHTML=`<span>${language==='ar'?'نوع المنتج':'Product type'}</span><select id="productTypeSelect" aria-label="${language==='ar'?'نوع المنتج':'Product type'}"><option value="">${language==='ar'?'جميع الأنواع':'All types'}</option>${[...categoryCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([name,num])=>`<option value="${name}">${name} (${num})</option>`).join('')}</select>`;
+  count.before(typeLabel);
+  const typeSelect=typeLabel.querySelector('select');typeSelect.value=category.startsWith('@')||category==='All'?'':category;
+  const syncFilterUrl=()=>{
+    const url=new URL(location.href);['category','division','solar','product'].forEach(key=>url.searchParams.delete(key));
+    if(category==='@SOLAR')url.searchParams.set('solar','1');else if(category.startsWith('@'))url.searchParams.set('division',category.slice(1));else if(category!=='All')url.searchParams.set('category',category);
+    if(search.value.trim())url.searchParams.set('q',search.value.trim());else url.searchParams.delete('q');
+    url.hash='catalogGrid';history.replaceState(null,'',url);
+  };
   options.tabIndex = 0;
   options.setAttribute("aria-label", language === "ar" ? "مرر تصنيفات المنتجات أفقياً" : "Scroll product categories horizontally");
   let categoryDrag = false, categoryStartX = 0, categoryStartLeft = 0;
@@ -176,26 +245,61 @@
     document.body.classList.toggle("category-open", !fixedMenu() && open);
     if (!fixedMenu()) (open ? categoryClose : categoryToggle).focus();
   };
-  const filteredProducts = () => { const query = search.value.trim().toLowerCase(); const t = window.ESHBELIA_I18N?.t || (value => value); return products.filter(product => { const specs = Object.values(product.specs || {}).join(" "); return (category === "All" || product.category === category) && `${product.id} ${product.name} ${product.category} ${t(product.name)} ${t(product.category)} ${specs}`.toLowerCase().includes(query); }); };
-  const productLink = product => { const url = new URL("products.html", new URL(".", location.href)); url.searchParams.set("product", product.id); url.hash = product.id; return url.href; };
-  const imageLink = product => product.imageWithheld ? null : new URL(product.image, location.href).href;
+  const searchKey = value => value.normalize('NFKC').toLowerCase().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/[\s\-–—_]+/g,' ').trim();
+  const filteredProducts = () => { const query = searchKey(search.value); const t = window.ESHBELIA_I18N?.t || (value => value); return catalogProducts.filter(product => { const specs = Object.values(product.specs || {}).join(" "); const matches=category==='All'||(category==='@SOLAR'?/solar/i.test(product.category):category.startsWith('@')?taxonomy?.divisionFor(product.category)===category.slice(1):product.category===category); return matches && searchKey(`${product.id} ${product.name} ${product.nameAr || ""} ${product.category} ${product.categoryAr || ""} ${t(product.name)} ${t(product.category)} ${specs}`).includes(query); }); };
+  const productLink = product => {
+    const url = new URL("products.html", new URL(".", location.href));
+    if (requestedCollection) url.searchParams.set("collection", requestedCollection);
+    if (category === '@SOLAR') url.searchParams.set('solar', '1');
+    else if (category.startsWith('@')) url.searchParams.set('division', category.slice(1));
+    else if (category !== 'All') url.searchParams.set('category', category);
+    if (search.value.trim()) url.searchParams.set('q', search.value.trim());
+    url.searchParams.set("product", product.id); url.hash = product.id; return url.href;
+  };
+  // Preview assets are not customer-accessible. Never send local or staging URLs.
+  const isOfficialStorefront = () => {
+    const url = new URL(location.href);
+    return url.protocol === 'https:' && ['eshbeliatrading.com', 'www.eshbeliatrading.com'].includes(url.hostname);
+  };
+  const imageLink = product => {
+    if (!isOfficialStorefront() || product.imageWithheld || product.localPhotoReview || !product.image) return null;
+    const url = new URL(product.image, location.href);
+    return url.origin === new URL(location.href).origin ? url.href : null;
+  };
   const whatsappMessage = product => {
-    const lines = [`Hello ESHBELIA SARABI, I would like to request a price for ${product.name} (${product.id}).`, "", `Product: ${productLink(product)}`];
-    const photo = imageLink(product); if (photo) lines.push(`Photo: ${photo}`);
+    const ar = language === 'ar';
+    const name = ar ? (product.nameAr || window.ESHBELIA_I18N?.t?.(product.name) || product.name) : product.name;
+    const lines = [ar ? `مرحباً ESHBELIA SARABI، أود طلب سعر ${name} (${product.id}).` : `Hello ESHBELIA SARABI, I would like to request a price for ${name} (${product.id}).`];
+    if (isOfficialStorefront()) lines.push('', `${ar ? 'المنتج' : 'Product'}: ${productLink(product)}`);
+    else lines.push('', ar ? 'طلب من نسخة معاينة؛ يرجى تأكيد تفاصيل المنتج والصورة.' : 'Request from a preview edition; please confirm product details and image.');
+    const photo = imageLink(product); if (photo) lines.push(`${ar ? 'الصورة' : 'Photo'}: ${photo}`);
     return lines.join("\n");
   };
-  const card = product => {
+  const photoReviewNotice = product => product.localPhotoReview ? (language === 'ar' ? 'صورة للمراجعة — لم تُعتمد نهائياً' : 'Image for review — not finally approved') : '';
+  const baseCard = product => {
+    const displayName = productName(product), displayCategory = productCategory(product);
     const specs = Object.entries(product.specs || {}).slice(0, 6);
     const price = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : `<strong>Request price</strong><span>${product.pricingMode === "pending-price-list" ? "Price list pending verification" : "Quoted according to quantity and project"}</span>`;
     const message = encodeURIComponent(whatsappMessage(product));
-    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${product.name}"><img src="${product.image}" alt="${product.name}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${product.category}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${product.name}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${product.name} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
+    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${displayName}"><img src="${product.image}" alt="${displayName}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${displayCategory}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${displayName}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${displayName} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
+  };
+  const card = product => {
+    const html = baseCard(product), notice = photoReviewNotice(product);
+    return notice ? html.replace('<div class="shop-card-body">', `<div class="shop-card-body"><p class="photo-review-notice" role="note">${notice}</p>`) : html;
   };
   const openProduct = product => {
     imageZoom = 1; imagePointers.clear(); pinchDistance = 0; dragActive = false; dragMoved = false;
     currentProductIndex = products.findIndex(item => item.id === product.id);
-    dialogImage.src = product.image; dialogImage.alt = product.name; dialogImage.classList.remove("enlarged");
+    dialogImage.src = product.image; dialogImage.alt = productName(product); dialogImage.classList.remove("enlarged");
     dialogImageButton.classList.remove("dragging"); dialogImageButton.scrollTo({left:0,top:0}); dialogImageHint.textContent = language === "ar" ? "اضغط للتكبير • اسحب لتحريك الصورة" : "Click to enlarge • drag to move";
-    dialogCategory.textContent = product.category; dialogTitle.textContent = product.name; dialogCode.textContent = product.id;
+    dialogCategory.textContent = productCategory(product); dialogTitle.textContent = productName(product); dialogCode.textContent = product.id;
+    let reviewNotice = document.getElementById('productDialogPhotoReview');
+    if (!reviewNotice) {
+      reviewNotice = document.createElement('p'); reviewNotice.id = 'productDialogPhotoReview';
+      reviewNotice.className = 'photo-review-notice'; reviewNotice.setAttribute('role', 'note');
+      dialogCode.insertAdjacentElement('afterend', reviewNotice);
+    }
+    reviewNotice.textContent = photoReviewNotice(product); reviewNotice.hidden = !reviewNotice.textContent;
     dialogSpecs.innerHTML = Object.entries(product.specs || {}).map(([key,value]) => `<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>";
     dialogPrice.innerHTML = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : "<strong>Request price</strong><span>Quoted according to quantity and project</span>";
     const message = encodeURIComponent(whatsappMessage(product));
@@ -214,7 +318,9 @@
     openProduct(list[(Math.max(0, start) + offset + list.length) % list.length]);
   };
   const render = (preserveFeedPosition = false) => { const priorScroll = preserveFeedPosition ? grid.scrollTop : 0; const list = filteredProducts(); count.textContent = `${list.length} products`; grid.innerHTML = list.slice(0, visible).map(card).join("") || `<div class="rfq-empty"><h2>No matching products</h2><p>Try another category or search term.</p></div>`; loadMore.hidden = visible >= list.length; if (preserveFeedPosition) grid.scrollTop = priorScroll; ESHBELIA_RFQ.updateBadges(); };
-  options.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return; category = button.dataset.category; search.value = ""; activeCategory.textContent = category === "All" ? "All products" : category; visible = 60; options.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item === button)); button.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"}); grid.scrollTo({top:0,behavior:"auto"}); if (!fixedMenu()) setDrawer(false); render(); });
+  const selectCategory=value=>{category=value;search.value='';activeCategory.textContent=filterLabel(category);visible=60;typeSelect.value=category.startsWith('@')||category==='All'?'':category;options.querySelectorAll('.filter').forEach(item=>item.classList.toggle('active',item.dataset.category===category));syncFilterUrl();grid.scrollTo({top:0,behavior:'auto'});render();};
+  options.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return;selectCategory(button.dataset.category);button.scrollIntoView({behavior:motion(),block:'nearest',inline:'center'});if(!fixedMenu())setDrawer(false); });
+  typeSelect.addEventListener('change',()=>selectCategory(typeSelect.value||'All'));
   categoryToggle.addEventListener("click", () => setDrawer(!filters.classList.contains("open")));
   categoryClose.addEventListener("click", () => setDrawer(false));
   categoryBackdrop.addEventListener("click", () => setDrawer(false));
@@ -223,10 +329,12 @@
   search.addEventListener("input", () => {
     if (search.value.trim()) {
       category = "All";
+      typeSelect.value = '';
       activeCategory.textContent = language === "ar" ? "جميع التصنيفات" : "All products";
       filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item.dataset.category === "All"));
     }
     visible = 60;
+    syncFilterUrl();
     render();
   });
   loadMore.addEventListener("click", () => { visible += 60; render(); });
@@ -297,8 +405,8 @@
   }, {passive:false});
   dialogImageButton.addEventListener("pointerup", stopImageDrag); dialogImageButton.addEventListener("pointercancel", stopImageDrag); dialogImage.addEventListener("dragstart", event => event.preventDefault());
   document.addEventListener("keydown", event => { if (!productDialog.open) return; if (event.key === "ArrowLeft") { event.preventDefault(); moveProduct(language === "ar" ? 1 : -1); } if (event.key === "ArrowRight") { event.preventDefault(); moveProduct(language === "ar" ? -1 : 1); } });
-  productDialog.addEventListener("close", () => { productDialog.classList.remove('image-only'); imagePointers.clear(); dialogImage.classList.remove("enlarged"); dialogImageButton.classList.remove("dragging"); dragActive = false; history.replaceState(null, "", "products.html"); });
-  const requestedProduct = new URLSearchParams(location.search).get("product");
+  productDialog.addEventListener("close", () => { productDialog.classList.remove('image-only'); imagePointers.clear(); dialogImage.classList.remove("enlarged"); dialogImageButton.classList.remove("dragging"); dragActive = false;syncFilterUrl(); });
+  const requestedProduct = pageParams.get("product");
   // A deep link opens its product without narrowing subsequent browsing to one item.
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting) && !loadMore.hidden) { visible += 60; render(); } }, { rootMargin: "700px 0px" });
