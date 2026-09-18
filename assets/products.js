@@ -77,20 +77,30 @@
     approvalStage:"Product approved; final product image pending",
     releaseState:"COMMERCIAL_PREVIEW"
   }));
+  const uaeStreetLightingR08 = (window.SEVILLA_UAE_STREET_LIGHTING_R08 || []).map(item => ({...item, brand:"SEVILLA by ESHBELIA SARABI"}));
+  const lightingCatalogR01 = (window.SEVILLA_LIGHTING_CATALOG_R01_PRODUCTS || []).map(item => ({
+    ...item,
+    brand:"SEVILLA by ESHBELIA SARABI",
+    categorySlug:"sevilla-lighting-catalog-r01",
+    imageWithheld:false,
+    localPhotoReview:false,
+    releaseState:"COMMERCIAL_PREVIEW"
+  }));
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
     specs: Object.fromEntries((item.specs || []).map((value, index) => [`Specification ${index + 1}`, value])),
     price: null, currency: null, pricingMode: "rfq", offeredBy: "ESHBELIA SARABI", datasheet: null
   }));
   const chandeliers = (window.ESHBELIA_CONTENT.chandeliers || []).map(item => ({
-    id: item.code, name: item.name, category: "Chandeliers", categorySlug: "chandeliers", image: item.image,
+    id: item.code, name: item.name, category: item.collection === "Architectural" ? "Modern Chandeliers" : "Chandeliers", categorySlug: item.collection === "Architectural" ? "modern-chandeliers" : "chandeliers", image: item.image,
     specs: { Collection: item.collection, Finish: item.finish, Material: item.material, Size: item.size, Lighting: item.lights },
     price: null, currency: null, pricingMode: "rfq", offeredBy: "ESHBELIA SARABI"
   }));
   const categoryMap = {"Switches & Controls":"Wiring Accessories","Floodlights":"Flood Lighting","Street Lights":"Street Lighting","Underground Lights":"Inground Lighting"};
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
   // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
-  const products = [...new Map([...imported, ...additions, ...commercialPreviews, ...frenchReviews, ...lightingCollectionReviews, ...controlled, ...chandeliers].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA by ESHBELIA SARABI"}); return [product.id, product]; })).values()].map(product => {
+  const products = [...new Map([...imported, ...additions, ...commercialPreviews, ...frenchReviews, ...lightingCollectionReviews, ...controlled, ...chandeliers, ...lightingCatalogR01, ...uaeStreetLightingR08].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA by ESHBELIA SARABI"}); return [product.id, product]; })).values()].map(product => {
+    if (product.categorySlug === 'sevilla-lighting-catalog-r01') return product;
     if (pendingPublicationPhotos[product.id]) return {...product,image:pendingPublicationPhotos[product.id],imageWithheld:false,approvalStage:'New commercial rendering - local preview; publication pending'};
     if (customerApprovedPhotos[product.id]) return {...product,image:customerApprovedPhotos[product.id],imageWithheld:false,approvalStage:'Customer-approved catalog image'};
     if (product.id === 'ESH-AC-0019') return {...product,image:'assets/sevilla-batch02-review/ESH-AC-0019-white-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'SEVILLA lettering corrected - local review only; technical clarification pending'};
@@ -119,6 +129,8 @@
     };
     return product;
   });
+  const catalogSummaryCount = document.querySelector('#catalogSummaryCount');
+  if (catalogSummaryCount) catalogSummaryCount.textContent = products.length.toLocaleString();
   // Exact, source-reviewed identity removal only. Never strip arbitrary alphanumeric
   // strings: they may be technical ratings, dimensions or valid SEVILLA IDs.
   const wallLight = products.find(product => product.id === 'ESH-WL-0064');
@@ -170,6 +182,23 @@
   });
   const pageParams = new URLSearchParams(location.search);
   const requestedCollection = pageParams.get("collection");
+  if (requestedCollection === 'uae-street-lighting-r08') {
+    document.title = 'UAE Street Lighting Range R08 | SEVILLA by ESHBELIA SARABI';
+    const hero = document.querySelector('.catalog-hero');
+    if (hero) { hero.querySelector('.eyebrow').textContent = 'SEVILLA by ESHBELIA SARABI'; hero.querySelector('h1').textContent = language === 'ar' ? 'نطاق إنارة الشوارع والأعمدة R08' : 'UAE Street Lighting Range R08'; hero.querySelector('p').textContent = language === 'ar' ? '35 تكويناً للأعمدة وثلاث عائلات لكشافات الطرق، مع الاختيار النهائي حسب جدول المشروع.' : '35 pole configurations and three LED road-luminaire families, with final selection coordinated to the project schedule.'; }
+  }
+  if (requestedCollection === 'sevilla-lighting-catalog-r01') {
+    document.title = 'SEVILLA by ESHBELIA SARABI Catalog R01 | ESHBELIA SARABI';
+    const hero = document.querySelector('.catalog-hero');
+    const isArabic = language === 'ar';
+    if (hero) {
+      hero.querySelector('.eyebrow').textContent = 'SEVILLA by ESHBELIA SARABI';
+      hero.querySelector('h1').textContent = isArabic ? 'كتالوج إنارة SEVILLA R01' : 'SEVILLA by ESHBELIA SARABI Catalog R01';
+      hero.querySelector('p').textContent = isArabic
+        ? '72 عائلة منتجات مصنفة بصورها المعتمدة من نسخة العرض التجاري.'
+        : '72 classified product families with approved artwork from the commercial-preview catalog.';
+    }
+  }
   const catalogProducts = requestedCollection ? products.filter(product => product.categorySlug === requestedCollection) : products;
   const taxonomy = window.ESHBELIA_TAXONOMY;
   const fullCategoryCounts = products.reduce((totals, product) => totals.set(product.category, (totals.get(product.category) || 0) + 1), new Map());
@@ -281,7 +310,7 @@
     const specs = Object.entries(product.specs || {}).slice(0, 6);
     const price = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : `<strong>Request price</strong><span>${product.pricingMode === "pending-price-list" ? "Price list pending verification" : "Quoted according to quantity and project"}</span>`;
     const message = encodeURIComponent(whatsappMessage(product));
-    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${displayName}"><img src="${product.image}" alt="${displayName}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${displayCategory}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${displayName}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${displayName} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
+    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${displayName}"><img src="${product.image}" alt="${product.imageAlt || displayName}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${displayCategory}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${displayName}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${displayName} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Catalog page ↓</a>` : ""}</div></article>`;
   };
   const card = product => {
     const html = baseCard(product), notice = photoReviewNotice(product);
@@ -290,7 +319,7 @@
   const openProduct = product => {
     imageZoom = 1; imagePointers.clear(); pinchDistance = 0; dragActive = false; dragMoved = false;
     currentProductIndex = products.findIndex(item => item.id === product.id);
-    dialogImage.src = product.image; dialogImage.alt = productName(product); dialogImage.classList.remove("enlarged");
+    dialogImage.src = product.image; dialogImage.alt = product.imageAlt || productName(product); dialogImage.classList.remove("enlarged");
     dialogImageButton.classList.remove("dragging"); dialogImageButton.scrollTo({left:0,top:0}); dialogImageHint.textContent = language === "ar" ? "اضغط للتكبير • اسحب لتحريك الصورة" : "Click to enlarge • drag to move";
     dialogCategory.textContent = productCategory(product); dialogTitle.textContent = productName(product); dialogCode.textContent = product.id;
     let reviewNotice = document.getElementById('productDialogPhotoReview');

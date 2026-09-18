@@ -4,12 +4,12 @@
   // classification or external standard code is inferred from a product name.
   const divisions = [
     {id:'IND',en:'Indoor Architectural',ar:'الإنارة الداخلية المعمارية',categories:['Ceiling Lights','Downlights & Spotlights','COB Downlights','Downlights','Recessed Downlights','Recessed Trimless Spots','Surface-Mounted Downlights','Recessed Modular Luminaires','Surface-Mounted Modular Luminaires','Magnetic Track Lights','Track Lights','Modern Electric Track','Linear Lighting','Panel Lights','Surface Panel Lights','Office Lights','Surface Lighting','LED Directional Lights','Staircase Lights']},
-    {id:'DEC',en:'Decorative Lighting',ar:'الإنارة الديكورية',categories:['Chandeliers','Bedside Chandeliers','Fan Lights','French Decorative Lighting','Wall Lighting','Wall Lights','LED Mirror Lights']},
+    {id:'DEC',en:'Decorative Lighting',ar:'الإنارة الديكورية',categories:['Chandeliers','Modern Chandeliers','Bedside Chandeliers','Fan Lights','French Decorative Lighting','Wall Lighting','Wall Lights','LED Mirror Lights']},
     {id:'OUT',en:'Outdoor & Landscape',ar:'الإنارة الخارجية واللاندسكيب',categories:['Outdoor Wall Lights','French Wall Lighting','Bulkhead Lights','Garden & Landscape Lighting','Linear Wall Lights','Solar Lawn Lights','Solar Wall Lights','Solar Bollard Lights','Solar Garden Lights','Portable Solar Lights','Solar Lighting','Garden Spike Lights','Inground Lighting','Bollard Lights','Flood Lighting','Solar Floodlights','Pool Lighting']},
-    {id:'URB',en:'Road & Urban',ar:'إنارة الطرق والمدن',categories:['Street Lighting','Solar Street Lights','Integrated Solar Street Lights','French Street & Post Lighting']},
+    {id:'URB',en:'Road & Urban',ar:'إنارة الطرق والمدن',categories:['Street Lighting Poles & Fixtures','Street Lighting','LED Road Luminaires','Solar Street Lights','Integrated Solar Street Lights','French Street & Post Lighting']},
     {id:'IDU',en:'Industrial Lighting',ar:'الإنارة الصناعية',categories:['High Bay Lights','High-Bay Lights','LED Tubes & Fixtures','Waterproof Diffusers','Waterproof Lighting']},
     {id:'EMG',en:'Emergency & Safety',ar:'إنارة الطوارئ والسلامة',categories:['LED Emergency Units','Emergency Lighting','Exit Signs']},
-    {id:'CTL',en:'Controls & Smart',ar:'التحكم والإنارة الذكية',categories:['LED Drivers','Lighting Controls','Sensors']},
+    {id:'CTL',en:'Controls & Smart',ar:'التحكم والإنارة الذكية',categories:['LED Drivers','Power Supplies','Lighting Controls','Sensors']},
     {id:'CMP',en:'Components & Light Sources',ar:'المكونات ومصادر الضوء',categories:['LED Strip Lights','LED Bulbs','LED Lamps','LED Tubes','Clear Diffusers','Frosted Diffusers']},
     // Retained ranges from the website: outside the lighting-only master list.
     {id:'ELE',en:'Electrical Accessories',ar:'الملحقات الكهربائية',categories:['Switches & Sockets','Wiring Accessories','Distribution Equipment','Extension Sockets','Desktop Popup Sockets','Door Bells','Electrical Accessories']},

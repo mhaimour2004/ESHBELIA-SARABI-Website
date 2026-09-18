@@ -12,7 +12,7 @@
     'Home':'الرئيسية', 'About':'عن الشركة', 'About Us':'عن الشركة', 'Solutions':'الحلول', 'Services':'الخدمات',
     'Products':'المنتجات', 'Projects':'المشاريع', 'Manufacturers':'المصنّعون', 'Contact':'تواصل معنا', 'Contact Us':'تواصل معنا',
     'Menu':'القائمة', 'Main navigation':'القائمة الرئيسية', 'Product Catalogue':'كتالوج المنتجات', 'Basket':'السلة',
-    'Chandeliers':'الثريات', 'Cables & Wires':'الكوابل والأسلاك', 'Lighting Catalogs':'كتالوجات الإنارة',
+    'Modern Chandeliers':'الثريات الحديثة', 'Street Lighting Poles & Fixtures':'أعمدة وتجهيزات إنارة الشوارع', 'LED Road Luminaires':'كشافات الطرق LED', 'Power Supplies':'مزودات الطاقة', 'Chandeliers':'الثريات', 'Cables & Wires':'الكوابل والأسلاك', 'Lighting Catalogs':'كتالوجات الإنارة',
     'Lighting & Cable Solutions':'حلول الإنارة والكوابل', 'LIGHTING & CABLE SOLUTIONS':'حلول الإنارة والكوابل',
     'Sharjah • Dubai, United Arab Emirates':'الشارقة • دبي، الإمارات العربية المتحدة',
     'Sharjah • Dubai, UAE':'الشارقة • دبي، الإمارات', 'UAE • China • Oman • Jordan':'الإمارات • الصين • عُمان • الأردن',
