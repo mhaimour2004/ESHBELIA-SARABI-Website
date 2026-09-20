@@ -32,10 +32,8 @@
   const rejectedTransientPhotoIds = new Set(window.ESHBELIA_REJECTED_TRANSIENT_PHOTO_IDS || []);
   const imported = (window.ESHBELIA_CATALOG || []).map(item => ({
     ...item,
-    sourceImage: item.image,
     image: withheldImageIds.has(item.id) ? "assets/brand/product-image-under-review.svg" : `assets/sevilla-stage1/${item.id}.webp`,
     imageWithheld: withheldImageIds.has(item.id),
-    approvalStage: "Stage 1 review"
   }));
   const additions = window.ESHBELIA_CATALOG_ADDITIONS || [];
   const commercialPreviews = (window.SEVILLA_NEW_PRODUCTS_PUBLIC || []).map(item => ({...item, brand:"SEVILLA by ESHBELIA SARABI"}));
@@ -54,9 +52,7 @@
     currency:null,
     pricingMode:"rfq",
     offeredBy:"ESHBELIA SARABI",
-    localPhotoReview:false,
-    approvalStage:"Product approved; final product image pending",
-    releaseState:"COMMERCIAL_PREVIEW"
+    localPhotoReview:false
   }));
   const lightingCollectionReviews = (window.SEVILLA_LIGHTING_COLLECTION_R03_PRODUCTS || []).map(item => ({
     id:item.id,
@@ -73,19 +69,11 @@
     currency:null,
     pricingMode:"rfq",
     offeredBy:"ESHBELIA SARABI",
-    localPhotoReview:false,
-    approvalStage:"Product approved; final product image pending",
-    releaseState:"COMMERCIAL_PREVIEW"
+    localPhotoReview:false
   }));
   const uaeStreetLightingR08 = (window.SEVILLA_UAE_STREET_LIGHTING_R08 || []).map(item => ({...item, brand:"SEVILLA by ESHBELIA SARABI"}));
-  const lightingCatalogR01 = (window.SEVILLA_LIGHTING_CATALOG_R01_PRODUCTS || []).map(item => ({
-    ...item,
-    brand:"SEVILLA by ESHBELIA SARABI",
-    categorySlug:"sevilla-lighting-catalog-r01",
-    imageWithheld:false,
-    localPhotoReview:false,
-    releaseState:"COMMERCIAL_PREVIEW"
-  }));
+  const lightingCatalogR01 = [];
+  const indoorRangeR03 = (window.SEVILLA_INDOOR_RANGE_R03_PRODUCTS || []).map(item => ({...item, brand:"SEVILLA by ESHBELIA SARABI"}));
   const controlled = (window.ESHBELIA_CONTENT.catalogProducts || []).map(item => ({
     id: item.id, name: item.name, category: item.category, categorySlug: "eshbelia-products", image: item.image,
     specs: Object.fromEntries((item.specs || []).map((value, index) => [`Specification ${index + 1}`, value])),
@@ -99,37 +87,36 @@
   const categoryMap = {"Switches & Controls":"Wiring Accessories","Floodlights":"Flood Lighting","Street Lights":"Street Lighting","Underground Lights":"Inground Lighting"};
   const normalize = product => ({ ...product, category: categoryMap[product.category] || product.category });
   // Imported draft sheets have the lowest priority. Approved ESHBELIA sheets and chandelier pages always win on duplicate IDs.
-  const products = [...new Map([...imported, ...additions, ...commercialPreviews, ...frenchReviews, ...lightingCollectionReviews, ...controlled, ...chandeliers, ...lightingCatalogR01, ...uaeStreetLightingR08].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA by ESHBELIA SARABI"}); return [product.id, product]; })).values()].map(product => {
+  let products = [...new Map([...imported, ...additions, ...commercialPreviews, ...frenchReviews, ...lightingCollectionReviews, ...controlled, ...chandeliers, ...indoorRangeR03, ...uaeStreetLightingR08].map(item => { const product = normalize({...item, brand:item.brand || "SEVILLA by ESHBELIA SARABI"}); return [product.id, product]; })).values()].map(product => {
     if (product.categorySlug === 'sevilla-lighting-catalog-r01') return product;
-    if (pendingPublicationPhotos[product.id]) return {...product,image:pendingPublicationPhotos[product.id],imageWithheld:false,approvalStage:'New commercial rendering - local preview; publication pending'};
-    if (customerApprovedPhotos[product.id]) return {...product,image:customerApprovedPhotos[product.id],imageWithheld:false,approvalStage:'Customer-approved catalog image'};
-    if (product.id === 'ESH-AC-0019') return {...product,image:'assets/sevilla-batch02-review/ESH-AC-0019-white-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'SEVILLA lettering corrected - local review only; technical clarification pending'};
-    if (product.id === 'ESH-AC-0050') return {...product,image:'assets/sevilla-final-20260904/ESH-AC-0050-review-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'Five-unit rendering — local review only; exact variant mapping pending'};
-    if (product.id === 'ESH-WL-0063') return {...product,image:'assets/sevilla-final-20260904/ESH-WL-0063-review-r02.png',imageWithheld:false,localPhotoReview:true,approvalStage:'Front-view rendering — local review only; exact product approval pending'};
-    if (customerRejectedPhotos.has(product.id)) return {...product,image:'assets/brand/product-image-under-review.svg',imageWithheld:true,approvalStage:'Image not approved by customer'};
-    if (presentationHolds.includes(product.id)) return {...product, image: 'assets/brand/product-image-under-review.svg', imageWithheld: true, approvalStage: 'Image presentation under review'};
-    if (reviewedPhotoUpdates[product.id]) return {...product, image: reviewedPhotoUpdates[product.id], imageWithheld: false, approvalStage: 'White product photo - local approval preview'};
+    if (pendingPublicationPhotos[product.id]) return {...product,image:pendingPublicationPhotos[product.id],imageWithheld:false};
+    if (customerApprovedPhotos[product.id]) return {...product,image:customerApprovedPhotos[product.id],imageWithheld:false};
+    if (product.id === 'ESH-AC-0019') return {...product,image:'assets/sevilla-priority-review/ESH-AC-0019.webp',imageWithheld:false,localPhotoReview:true};
+    if (product.id === 'ESH-AC-0050') return {...product,image:'assets/sevilla-stage1/ESH-AC-0050.webp',imageWithheld:false,localPhotoReview:true};
+    if (product.id === 'ESH-WL-0063') return {...product,image:'assets/sevilla-stage1/ESH-WL-0063.webp',imageWithheld:false,localPhotoReview:true};
+    if (customerRejectedPhotos.has(product.id)) return {...product,image:'assets/brand/product-image-under-review.svg',imageWithheld:true};
+    if (presentationHolds.includes(product.id)) return {...product, image: 'assets/brand/product-image-under-review.svg', imageWithheld: true};
+    if (reviewedPhotoUpdates[product.id]) return {...product, image: reviewedPhotoUpdates[product.id], imageWithheld: false};
     if (priorityPhotoIds.has(product.id)) return {
       ...product,
       image: `assets/sevilla-priority-review/${product.id}.webp`,
-      imageWithheld: false,
-      approvalStage: "Offline priority photo review"
+      imageWithheld: false
     };
     if (rejectedTransientPhotoIds.has(product.id)) return {
       ...product,
       image: "assets/brand/product-image-under-review.svg",
-      imageWithheld: true,
-      approvalStage: "Image withheld after supplier and clarity review"
+      imageWithheld: true
     };
     if (transientPhotoIds.has(product.id)) return {
       ...product,
       image: `assets/sevilla-transient/${product.id}.webp`,
-      imageWithheld: false,
-      approvalStage: "Transient white-background website review"
+      imageWithheld: false
     };
     return product;
   });
   const catalogSummaryCount = document.querySelector('#catalogSummaryCount');
+  const catalogSummaryClassifiedCount = document.querySelector('#catalogSummaryClassifiedCount');
+  const catalogSummaryClassifiedLabel = document.querySelector('#catalogSummaryClassifiedLabel');
   if (catalogSummaryCount) catalogSummaryCount.textContent = products.length.toLocaleString();
   // Exact, source-reviewed identity removal only. Never strip arbitrary alphanumeric
   // strings: they may be technical ratings, dimensions or valid SEVILLA IDs.
@@ -145,6 +132,8 @@
   const categoryToggle = document.querySelector("#categoryToggle"), categoryClose = document.querySelector("#categoryClose"), categoryBackdrop = document.querySelector("#categoryBackdrop"), activeCategory = document.querySelector("#activeCategory"), categoryRailPrev = document.querySelector("#categoryRailPrev"), categoryRailNext = document.querySelector("#categoryRailNext");
   const productDialog = document.querySelector("#productDialog"), dialogClose = document.querySelector("#productDialogClose"), dialogPrev = document.querySelector("#productDialogPrev"), dialogNext = document.querySelector("#productDialogNext"), dialogImageButton = document.querySelector("#productDialogImageButton"), dialogImage = document.querySelector("#productDialogImage"), dialogImageHint = document.querySelector("#productDialogImageHint"), dialogCategory = document.querySelector("#productDialogCategory"), dialogTitle = document.querySelector("#productDialogTitle"), dialogCode = document.querySelector("#productDialogCode"), dialogSpecs = document.querySelector("#productDialogSpecs"), dialogPrice = document.querySelector("#productDialogPrice"), dialogAdd = document.querySelector("#productDialogAdd"), dialogWhatsapp = document.querySelector("#productDialogWhatsapp"), dialogDatasheet = document.querySelector("#productDialogDatasheet");
   let category = "All", visible = 60, currentProductIndex = -1, dragActive = false, dragMoved = false, dragStartX = 0, dragStartY = 0, dragStartLeft = 0, dragStartTop = 0;
+  const catalogPublications = document.querySelector('.lighting-catalogs');
+  if (catalogPublications) loadMore.parentElement.after(catalogPublications);
   const motion = () => matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
   const viewerControls = document.createElement('div');
   viewerControls.className = 'viewer-controls';
@@ -204,8 +193,8 @@
   const categoryCounts = catalogProducts.reduce((totals, product) => totals.set(product.category, (totals.get(product.category) || 0) + 1), new Map());
   const divisions = taxonomy ? taxonomy.groups([...categoryCounts]) : [];
   const solarCount = catalogProducts.filter(product=>/solar/i.test(product.category)).length;
-  const categories = taxonomy ? ['All',...divisions.map(group=>'@'+group.id),...(solarCount?['@SOLAR']:[])] : ['All',...categoryCounts.keys()];
-  const filterLabel = item => item === 'All' ? (language==='ar'?'جميع المنتجات':'All products') : item === '@SOLAR' ? (language==='ar'?'الإنارة الشمسية':'Solar Lighting') : item.startsWith('@') ? taxonomy.label(divisions.find(group=>'@'+group.id===item),language) : (window.ESHBELIA_I18N?.t?.(item)||item);
+  const categories = taxonomy ? [...divisions.map(group=>'@'+group.id),...(solarCount?['@SOLAR']:[])] : [...categoryCounts.keys()];
+  const filterLabel = item => item === 'All' ? (language==='ar'?'جميع المنتجات':'Classifications') : item === '@SOLAR' ? (language==='ar'?'الإنارة الشمسية':'Solar Lighting') : item.startsWith('@') ? taxonomy.label(divisions.find(group=>'@'+group.id===item),language) : (window.ESHBELIA_I18N?.t?.(item)||item);
   const filterCount = item => item==='All' ? catalogProducts.length : item==='@SOLAR' ? solarCount : item.startsWith('@') ? divisions.find(group=>'@'+group.id===item)?.total||0 : categoryCounts.get(item)||0;
   const requestedCategory = pageParams.get("category");
   if (requestedCategory && categoryCounts.has(requestedCategory)) category = requestedCategory;
@@ -215,7 +204,7 @@
   options.innerHTML = categories.map(item => `<button class="filter${item === category ? " active" : ""}" type="button" data-category="${item}"><span>${filterLabel(item)}</span><b>${filterCount(item)}</b></button>`).join("");
   activeCategory.textContent = filterLabel(category);
   const typeLabel=document.createElement('label');typeLabel.className='catalog-type-label';
-  typeLabel.innerHTML=`<span>${language==='ar'?'نوع المنتج':'Product type'}</span><select id="productTypeSelect" aria-label="${language==='ar'?'نوع المنتج':'Product type'}"><option value="">${language==='ar'?'جميع الأنواع':'All types'}</option>${[...categoryCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([name,num])=>`<option value="${name}">${name} (${num})</option>`).join('')}</select>`;
+  typeLabel.innerHTML=`<span>${language==='ar'?'نوع المنتج':'Classification'}</span><select id="productTypeSelect" aria-label="${language==='ar'?'نوع المنتج':'Classification'}"><option value="">${language==='ar'?'جميع الأنواع':'Choose a classification'}</option>${[...categoryCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([name,num])=>`<option value="${name}">${name} (${num})</option>`).join('')}</select>`;
   count.before(typeLabel);
   const typeSelect=typeLabel.querySelector('select');typeSelect.value=category.startsWith('@')||category==='All'?'':category;
   const syncFilterUrl=()=>{
@@ -273,6 +262,8 @@
     if (!fixedMenu()) (open ? categoryClose : categoryToggle).focus();
   };
   const searchKey = value => value.normalize('NFKC').toLowerCase().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/[\s\-–—_]+/g,' ').trim();
+  const updateInventorySummary = () => { if (catalogSummaryClassifiedCount) catalogSummaryClassifiedCount.textContent = filterCount(category).toLocaleString(); if (catalogSummaryClassifiedLabel) catalogSummaryClassifiedLabel.textContent = `${filterLabel(category)} - products`; };
+  updateInventorySummary();
   const filteredProducts = () => { const query = searchKey(search.value); const t = window.ESHBELIA_I18N?.t || (value => value); return catalogProducts.filter(product => { const specs = Object.values(product.specs || {}).join(" "); const matches=category==='All'||(category==='@SOLAR'?/solar/i.test(product.category):category.startsWith('@')?taxonomy?.divisionFor(product.category)===category.slice(1):product.category===category); return matches && searchKey(`${product.id} ${product.name} ${product.nameAr || ""} ${product.category} ${product.categoryAr || ""} ${t(product.name)} ${t(product.category)} ${specs}`).includes(query); }); };
   const productLink = product => {
     const url = new URL("products.html", new URL(".", location.href));
@@ -308,7 +299,7 @@
     const specs = Object.entries(product.specs || {}).slice(0, 6);
     const price = product.price != null ? `<strong>${product.currency || "AED"} ${Number(product.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><span>Published product price</span>` : `<strong>Request price</strong><span>${product.pricingMode === "pending-price-list" ? "Price list pending verification" : "Quoted according to quantity and project"}</span>`;
     const message = encodeURIComponent(whatsappMessage(product));
-    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${displayName}"><img src="${product.image}" alt="${product.imageAlt || displayName}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${displayCategory}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${displayName}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${displayName} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Datasheet ↓</a>` : ""}</div></article>`;
+    return `<article id="${product.id}" class="shop-card"><a class="shop-card-media" href="${productLink(product)}" data-view="${product.id}" aria-label="View ${displayName}"><img src="${product.image}" alt="${product.imageAlt || displayName}" loading="lazy"></a><div class="shop-card-body"><div class="shop-card-meta"><span>${product.brand} · ${displayCategory}</span><strong>${product.id}</strong></div><h2><a href="${productLink(product)}" data-view="${product.id}">${displayName}</a></h2><details><summary>Details</summary><dl>${specs.map(([key,value])=>`<div><dt>${key}</dt><dd>${value}</dd></div>`).join("") || "<div><dt>Status</dt><dd>Available on request</dd></div>"}</dl></details><div class="price-line">${price}</div><div class="shop-actions"><button class="rfq-add" type="button" data-add="${product.id}">Add to basket</button><a class="shop-wa" href="https://wa.me/971555533432?text=${message}" target="_blank" rel="noopener" aria-label="Order ${displayName} on WhatsApp">Order on WhatsApp</a></div>${product.datasheet ? `<a class="text-link" href="${product.datasheet}" download>Catalog page ↓</a>` : ""}</div></article>`;
   };
   const card = product => {
     const html = baseCard(product), notice = photoReviewNotice(product);
@@ -344,8 +335,8 @@
     const start = list.findIndex(item => item.id === products[currentProductIndex]?.id);
     openProduct(list[(Math.max(0, start) + offset + list.length) % list.length]);
   };
-  const render = (preserveFeedPosition = false) => { const priorScroll = preserveFeedPosition ? grid.scrollTop : 0; const list = filteredProducts(); count.textContent = `${list.length} products`; grid.innerHTML = list.slice(0, visible).map(card).join("") || `<div class="rfq-empty"><h2>No matching products</h2><p>Try another category or search term.</p></div>`; loadMore.hidden = visible >= list.length; if (preserveFeedPosition) grid.scrollTop = priorScroll; ESHBELIA_RFQ.updateBadges(); };
-  const selectCategory=value=>{category=value;search.value='';activeCategory.textContent=filterLabel(category);visible=60;typeSelect.value=category.startsWith('@')||category==='All'?'':category;options.querySelectorAll('.filter').forEach(item=>item.classList.toggle('active',item.dataset.category===category));syncFilterUrl();grid.scrollTo({top:0,behavior:'auto'});render();};
+  const render = (preserveFeedPosition = false) => { const priorScroll = preserveFeedPosition ? grid.scrollTop : 0; const list = filteredProducts(); updateInventorySummary(); count.textContent = `${list.length.toLocaleString()} shown`; grid.innerHTML = list.slice(0, visible).map(card).join("") || `<div class="rfq-empty"><h2>No matching products</h2><p>Try another category or search term.</p></div>`; loadMore.hidden = visible >= list.length; if (preserveFeedPosition) grid.scrollTop = priorScroll; ESHBELIA_RFQ.updateBadges(); };
+  const selectCategory=value=>{category=value;search.value='';activeCategory.textContent=filterLabel(category);updateInventorySummary();visible=60;typeSelect.value=category.startsWith('@')||category==='All'?'':category;options.querySelectorAll('.filter').forEach(item=>item.classList.toggle('active',item.dataset.category===category));syncFilterUrl();grid.scrollTo({top:0,behavior:'auto'});render();};
   options.addEventListener("click", event => { const button = event.target.closest("[data-category]"); if (!button) return;selectCategory(button.dataset.category);button.scrollIntoView({behavior:motion(),block:'nearest',inline:'center'});if(!fixedMenu())setDrawer(false); });
   typeSelect.addEventListener('change',()=>selectCategory(typeSelect.value||'All'));
   categoryToggle.addEventListener("click", () => setDrawer(!filters.classList.contains("open")));
@@ -357,7 +348,7 @@
     if (search.value.trim()) {
       category = "All";
       typeSelect.value = '';
-      activeCategory.textContent = language === "ar" ? "جميع التصنيفات" : "All products";
+      activeCategory.textContent = language === "ar" ? "جميع التصنيفات" : "Classifications";
       filters.querySelectorAll(".filter").forEach(item => item.classList.toggle("active", item.dataset.category === "All"));
     }
     visible = 60;

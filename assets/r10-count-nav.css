@@ -1,0 +1,5 @@
+/* R10: keep inventory totals visible after the storefront compact rules. */
+.catalog-page .catalog-intro{display:grid}
+.catalog-page .catalog-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem}
+@media(max-width:900px){.catalog-page .catalog-intro{grid-template-columns:1fr}.catalog-page .catalog-summary{display:grid}}
+@media(max-width:600px){.catalog-page .catalog-intro{display:grid}.catalog-page .catalog-intro p{display:none}.catalog-page .catalog-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;padding:.85rem}}
